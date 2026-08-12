@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'DM Sans',system-ui,sans-serif;background:#FAF7F2;color:#1A1714;-webkit-font-smoothing:antialiased;}
+  a{color:#4A7C59;text-decoration:none;}
+  a:hover{color:#3D2B1F;}
+  input{font-family:inherit;}
+  ::placeholder{color:#8A7F78;}
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:#E2DDD6;border-radius:9999px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  @keyframes pulsering{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.9;transform:scale(1.04)}}
+  @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</helmet>
+<div style="min-height:100vh;">
+
+<!-- ============ NAVBAR ============ -->
+<sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+<header style="position:sticky;top:0;z-index:100;background:rgba(250,247,242,0.92);backdrop-filter:blur(12px) saturate(1.4);-webkit-backdrop-filter:blur(12px) saturate(1.4);border-bottom:1px solid rgba(226,221,214,0.6);">
+  <nav style="max-width:1120px;margin:0 auto;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:16px;">
+    <div onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="color:#E8C5A0;flex-shrink:0;"><path d="M12 6.5C10.5 5 8 4.5 4 4.8V18c4-.3 6.5.2 8 1.7 1.5-1.5 4-2 8-1.7V4.8c-4-.3-6.5.2-8 1.7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6.5V19.7" stroke="currentColor" stroke-width="1.6"/></svg>
+      <div style="line-height:1;">
+        <div style="font-family:'Playfair Display',serif;font-weight:600;font-size:22px;color:#3D2B1F;">Imagitale</div>
+        <div style="font-size:11px;font-weight:300;color:#8A7F78;margin-top:2px;">{{ s.tagline }}</div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:32px;">
+      <span onClick="{{ goStories }}" style="cursor:pointer;font-size:14px;font-weight:500;letter-spacing:.02em;color:#1A1714;">{{ s.navStories }}</span>
+      <span onClick="{{ goHome }}" style="cursor:pointer;font-size:14px;font-weight:500;letter-spacing:.02em;color:#1A1714;">{{ s.navHow }}</span>
+      <span onClick="{{ goFaq }}" style="cursor:pointer;font-size:14px;font-weight:500;letter-spacing:.02em;color:#1A1714;">{{ s.navFaq }}</span>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div style="display:flex;padding:3px;border:1.5px solid #E2DDD6;border-radius:9999px;background:#fff;">
+        <button onClick="{{ setEn }}" style="{{ enSegStyle }}">EN</button>
+        <button onClick="{{ setFr }}" style="{{ frSegStyle }}">FR</button>
+      </div>
+      <div onClick="{{ goCart }}" style="position:relative;width:40px;height:40px;border-radius:9999px;background:#fff;border:1px solid #E2DDD6;box-shadow:0 1px 4px rgba(26,23,20,.06);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#3D2B1F;" style-hover="border-color:#E8C5A0;box-shadow:0 2px 12px rgba(26,23,20,.08);">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none"><path d="M4 5h2l1.6 10.2a1 1 0 0 0 1 .8h7.8a1 1 0 0 0 1-.8L20 8H6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19.5" r="1.2" fill="currentColor"/><circle cx="17" cy="19.5" r="1.2" fill="currentColor"/></svg>
+        <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;padding:0 4px;border-radius:9999px;background:#4A7C59;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ cart }}</span></sc-if>
+      </div>
+      <sc-if value="{{ loggedOut }}" hint-placeholder-val="{{ true }}"><span onClick="{{ goLogin }}" style="font-size:14px;font-weight:500;color:#8A7F78;cursor:pointer;" style-hover="color:#3D2B1F;">{{ s.navSignin }}</span></sc-if>
+      <sc-if value="{{ loggedIn }}" hint-placeholder-val="{{ false }}"><span onClick="{{ goAccount }}" title="{{ userName }}" style="width:36px;height:36px;border-radius:9999px;background:#3D2B1F;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">{{ userInitials }}</span></sc-if>
+      <button onClick="{{ goStories }}" style="background:#4A7C59;color:#fff;font-family:'DM Sans';font-weight:600;font-size:14px;letter-spacing:.02em;padding:10px 22px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ s.navCta }}</button>
+    </div>
+  </nav>
+</header>
+</sc-if>
+
+<!-- ============ LANDING ============ -->
+<sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+<main style="animation:fadeup .4s ease;">
+  <!-- Hero -->
+  <section style="max-width:1120px;margin:0 auto;padding:56px 24px 72px;display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;">
+    <div>
+      <p style="font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#C4714A;margin:0;">{{ s.heroEyebrow }}</p>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:60px;line-height:1.06;color:#3D2B1F;margin:18px 0 0;">
+        {{ s.heroT1 }}<br>
+        <span style="position:relative;display:inline-block;">{{ s.heroT2 }}
+          <svg viewBox="0 0 200 12" style="position:absolute;left:0;bottom:-8px;width:100%;height:12px;overflow:visible;"><path d="M0,6 C30,0 50,12 80,6 C110,0 130,12 160,6 C175,3 185,8 200,6" fill="none" stroke="#E8C5A0" stroke-width="3.5" stroke-linecap="round"/></svg>
+        </span><br>
+        {{ s.heroT3 }}
+      </h1>
+      <p style="font-size:18px;color:#8A7F78;max-width:460px;margin:34px 0 0;line-height:1.55;">{{ s.heroSub }}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:34px;">
+        <button onClick="{{ goStories }}" style="background:#4A7C59;color:#fff;font-weight:600;font-size:15px;letter-spacing:.02em;padding:15px 34px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ s.heroCta1 }}</button>
+        <button onClick="{{ goHome }}" style="background:transparent;color:#8A7F78;font-weight:500;font-size:14px;padding:15px 12px;border:none;cursor:pointer;" style-hover="color:#3D2B1F;text-decoration:underline;">{{ s.heroCta2 }}</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:34px;">
+        <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#8A7F78;"><svg width="15" height="15" viewBox="0 0 24 24" fill="#C4714A"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5L2.6 9.8l6.5-.9L12 2.5Z"/></svg>{{ s.trust1 }}</span>
+        <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#8A7F78;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8A7F78" stroke-width="1.6"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{{ s.trust2 }}</span>
+        <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#8A7F78;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A7F78" stroke-width="1.6"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>{{ s.trust3 }}</span>
+      </div>
+    </div>
+
+    <!-- Fanned covers -->
+    <div style="position:relative;height:420px;">
+      <div style="position:absolute;right:22%;top:6%;background:radial-gradient(circle at 50% 40%,rgba(232,197,160,.4),transparent 70%);width:340px;height:340px;filter:blur(8px);"></div>
+      <div style="position:absolute;left:6%;top:14%;width:190px;aspect-ratio:3/4;border-radius:12px;overflow:hidden;transform:rotate(-8deg);box-shadow:4px 4px 0 rgba(61,43,31,.15),0 8px 24px rgba(26,23,20,.12);background:{{ cover2 }};"></div>
+      <div style="position:absolute;left:22%;top:4%;width:210px;aspect-ratio:3/4;border-radius:12px;overflow:hidden;transform:rotate(-3deg);box-shadow:4px 4px 0 rgba(61,43,31,.15),0 8px 24px rgba(26,23,20,.12);background:{{ cover1 }};"></div>
+      <div style="position:absolute;left:40%;top:9%;width:216px;aspect-ratio:3/4;border-radius:12px;overflow:hidden;transform:rotate(2.5deg);box-shadow:6px 6px 0 rgba(61,43,31,.16),0 14px 34px rgba(26,23,20,.16);background:{{ cover0 }};">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,20,.55),transparent 55%);display:flex;align-items:flex-end;padding:16px;">
+          <span style="font-family:'Playfair Display',serif;font-size:19px;color:#fff;font-weight:600;line-height:1.2;">{{ heroBookTitle }}</span>
+        </div>
+      </div>
+      <div style="position:absolute;bottom:6px;left:8px;z-index:5;background:#fff;border-radius:9999px;padding:9px 16px;font-size:13px;font-weight:600;color:#3D2B1F;box-shadow:0 2px 12px rgba(26,23,20,.08);display:flex;align-items:center;gap:8px;">
+        <span style="display:flex;width:20px;height:20px;border-radius:9999px;background:#4A7C59;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        {{ s.heroBadge }}
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section style="background:#fff;padding:72px 0;">
+    <div style="max-width:1120px;margin:0 auto;padding:0 24px;">
+      <div style="text-align:center;margin-bottom:52px;">
+        <h2 style="display:inline-block;font-family:'Playfair Display',serif;font-weight:600;font-size:36px;color:#3D2B1F;margin:0;position:relative;">{{ s.howTitle }}
+          <svg viewBox="0 0 200 12" style="position:absolute;left:50%;transform:translateX(-50%);bottom:-10px;width:140px;height:12px;overflow:visible;"><path d="M0,6 C30,0 50,12 80,6 C110,0 130,12 160,6 C175,3 185,8 200,6" fill="none" stroke="#E8C5A0" stroke-width="3.5" stroke-linecap="round"/></svg>
+        </h2>
+      </div>
+      <div style="position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;">
+        <div style="position:absolute;left:12%;right:12%;top:24px;border-top:1.5px dashed #E8C5A0;"></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <span style="z-index:1;width:48px;height:48px;border-radius:9999px;background:#3D2B1F;color:#fff;font-family:'Playfair Display',serif;font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;">1</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4714A" stroke-width="1.5" style="margin-top:16px;"><path d="M12 6.5C10.5 5 8 4.5 4 4.8V18c4-.3 6.5.2 8 1.7 1.5-1.5 4-2 8-1.7V4.8c-4-.3-6.5.2-8 1.7Z" stroke-linejoin="round"/><path d="M12 6.5V19.7"/></svg>
+          <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:17px;color:#3D2B1F;margin:12px 0 4px;">{{ s.step1t }}</h3>
+          <p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.5;">{{ s.step1d }}</p>
+        </div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <span style="z-index:1;width:48px;height:48px;border-radius:9999px;background:#3D2B1F;color:#fff;font-family:'Playfair Display',serif;font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;">2</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4714A" stroke-width="1.5" style="margin-top:16px;"><rect x="3" y="7" width="18" height="13" rx="2.5"/><circle cx="12" cy="13.5" r="3.4"/><path d="M8.5 7l1.2-2.2h4.6L15.5 7"/></svg>
+          <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:17px;color:#3D2B1F;margin:12px 0 4px;">{{ s.step2t }}</h3>
+          <p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.5;">{{ s.step2d }}</p>
+        </div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <span style="z-index:1;width:48px;height:48px;border-radius:9999px;background:#3D2B1F;color:#fff;font-family:'Playfair Display',serif;font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;">3</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4714A" stroke-width="1.5" style="margin-top:16px;"><path d="M12 3l1.8 4.4L18 9l-4.2 1.6L12 15l-1.8-4.4L6 9l4.2-1.6L12 3Z" stroke-linejoin="round"/><path d="M18.5 14l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2Z" stroke-linejoin="round"/></svg>
+          <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:17px;color:#3D2B1F;margin:12px 0 4px;">{{ s.step3t }}</h3>
+          <p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.5;">{{ s.step3d }}</p>
+        </div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;">
+          <span style="z-index:1;width:48px;height:48px;border-radius:9999px;background:#3D2B1F;color:#fff;font-family:'Playfair Display',serif;font-weight:600;font-size:20px;display:flex;align-items:center;justify-content:center;">4</span>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C4714A" stroke-width="1.5" style="margin-top:16px;"><path d="M3.5 8.5 12 4l8.5 4.5-8.5 4.5-8.5-4.5Z" stroke-linejoin="round"/><path d="M3.5 8.5v7L12 20l8.5-4.5v-7M12 13v7"/></svg>
+          <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:17px;color:#3D2B1F;margin:12px 0 4px;">{{ s.step4t }}</h3>
+          <p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.5;">{{ s.step4d }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Catalogue teaser -->
+  <section style="max-width:1120px;margin:0 auto;padding:72px 24px;">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:36px;">
+      <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:36px;color:#3D2B1F;margin:0;position:relative;">{{ s.catTitle }}
+        <svg viewBox="0 0 200 12" style="position:absolute;left:0;bottom:-10px;width:160px;height:12px;overflow:visible;"><path d="M0,6 C30,0 50,12 80,6 C110,0 130,12 160,6 C175,3 185,8 200,6" fill="none" stroke="#E8C5A0" stroke-width="3.5" stroke-linecap="round"/></svg>
+      </h2>
+      <span onClick="{{ goStories }}" style="cursor:pointer;font-size:14px;font-weight:500;color:#3D2B1F;border-bottom:2px solid #E8C5A0;padding-bottom:2px;">{{ s.seeAll }}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <sc-for list="{{ books }}" as="b" hint-placeholder-count="3">
+        <article style="background:#fff;border-radius:20px;box-shadow:0 2px 12px rgba(26,23,20,.08);overflow:hidden;transition:all .3s ease;" style-hover="transform:translateY(-4px);box-shadow:0 8px 32px rgba(26,23,20,.12);">
+          <div onClick="{{ b.detail }}" style="position:relative;aspect-ratio:3/4;overflow:hidden;background:{{ b.cover }};cursor:pointer;">
+            <span style="position:absolute;top:10px;right:10px;background:#F5EBD8;color:#8B5E3C;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">{{ b.age }}</span>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+              <h3 onClick="{{ b.detail }}" style="font-family:'Playfair Display',serif;font-weight:600;font-size:17px;line-height:1.3;color:#3D2B1F;margin:0;cursor:pointer;">{{ b.title }}</h3>
+              <span style="white-space:nowrap;font-weight:700;font-size:18px;color:#1A1714;">{{ b.price }}</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+              <div style="display:flex;gap:6px;">
+                <span style="background:#F5EBD8;color:#8B5E3C;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">{{ b.tag1 }}</span>
+                <span style="background:#F5EBD8;color:#8B5E3C;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">{{ b.tag2 }}</span>
+              </div>
+              <span style="font-size:13px;color:#8A7F78;">{{ b.pages }}</span>
+            </div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section style="background:#fff;padding:72px 0;">
+    <div style="max-width:1120px;margin:0 auto;padding:0 24px;">
+      <h2 style="text-align:center;font-family:'Playfair Display',serif;font-weight:600;font-size:32px;color:#3D2B1F;margin:0 0 44px;">{{ s.testTitle }}</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+        <sc-for list="{{ testimonials }}" as="tm" hint-placeholder-count="3">
+          <div style="border:1px solid #E2DDD6;border-radius:20px;padding:24px;">
+            <div style="color:#C4714A;font-size:15px;letter-spacing:2px;">★★★★★</div>
+            <blockquote style="font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:#1A1714;margin:14px 0;line-height:1.55;">“{{ tm.quote }}”</blockquote>
+            <p style="margin:0;font-size:13px;font-weight:600;color:#3D2B1F;">{{ tm.name }} <span style="font-weight:400;color:#8A7F78;">· {{ tm.city }}</span></p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- GDPR -->
+  <section style="max-width:1120px;margin:0 auto;padding:0 24px 80px;">
+    <div style="background:#EEF5F8;border-radius:32px;padding:44px;">
+      <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:24px;color:#3D2B1F;margin:0;">{{ s.gdprTitle }}</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:24px;">
+        <div style="display:flex;gap:12px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2A6070" stroke-width="1.6" style="flex-shrink:0;margin-top:2px;"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>
+          <div><h3 style="font-size:15px;font-weight:600;color:#1A1714;margin:0 0 3px;">{{ s.gdpr1t }}</h3><p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.5;">{{ s.gdpr1d }}</p></div>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2A6070" stroke-width="1.6" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round"/></svg>
+          <div><h3 style="font-size:15px;font-weight:600;color:#1A1714;margin:0 0 3px;">{{ s.gdpr2t }}</h3><p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.5;">{{ s.gdpr2d }}</p></div>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2A6070" stroke-width="1.6" style="flex-shrink:0;margin-top:2px;"><path d="M12 3l7 2.5v5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5v-5L12 3Z" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><h3 style="font-size:15px;font-weight:600;color:#1A1714;margin:0 0 3px;">{{ s.gdpr3t }}</h3><p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.5;">{{ s.gdpr3d }}</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+</sc-if>
+
+<!-- ============ STORIES ============ -->
+<sc-if value="{{ isStories }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:1120px;margin:0 auto;padding:56px 24px 90px;animation:fadeup .4s ease;">
+  <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:48px;color:#3D2B1F;margin:0;position:relative;display:inline-block;">{{ s.storiesTitle }}
+    <svg viewBox="0 0 200 12" style="position:absolute;left:0;bottom:-10px;width:180px;height:12px;overflow:visible;"><path d="M0,6 C30,0 50,12 80,6 C110,0 130,12 160,6 C175,3 185,8 200,6" fill="none" stroke="#E8C5A0" stroke-width="3.5" stroke-linecap="round"/></svg>
+  </h1>
+  <p style="font-size:17px;color:#8A7F78;margin:22px 0 0;max-width:520px;">{{ s.storiesSub }}</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin:30px 0 40px;">
+    <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+      <button onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.label }}</button>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;">
+    <sc-for list="{{ books }}" as="b" hint-placeholder-count="3">
+      <article style="position:relative;background:#fff;border-radius:20px;box-shadow:0 2px 12px rgba(26,23,20,.08);overflow:hidden;transition:all .3s ease;" style-hover="transform:translateY(-4px);box-shadow:0 8px 32px rgba(26,23,20,.12);">
+        <div style="position:relative;aspect-ratio:3/4;overflow:hidden;background:{{ b.cover }};">
+          <span style="position:absolute;top:10px;right:10px;background:#F5EBD8;color:#8B5E3C;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">{{ b.age }}</span>
+          <div style="position:absolute;inset:0;background:rgba(26,23,20,.45);opacity:0;display:flex;align-items:center;justify-content:center;gap:10px;flex-direction:column;transition:opacity .2s ease;" style-hover="opacity:1;">
+            <button onClick="{{ b.select }}" style="background:transparent;border:1.5px solid #fff;color:#fff;font-weight:600;font-size:13px;padding:11px 20px;border-radius:9999px;cursor:pointer;">{{ s.personalise }}</button>
+            <button onClick="{{ b.detail }}" style="background:transparent;border:none;color:rgba(255,255,255,.85);font-weight:500;font-size:13px;cursor:pointer;text-decoration:underline;">{{ s.viewDetails }}</button>
+          </div>
+        </div>
+        <div style="padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+            <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:17px;line-height:1.3;color:#3D2B1F;margin:0;">{{ b.title }}</h3>
+            <span style="white-space:nowrap;font-weight:700;font-size:18px;color:#1A1714;">{{ b.price }}</span>
+          </div>
+          <p style="font-size:14px;color:#8A7F78;margin:8px 0 0;line-height:1.5;">{{ b.desc }}</p>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;">
+            <div style="display:flex;gap:6px;">
+              <span style="background:#F5EBD8;color:#8B5E3C;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">{{ b.tag1 }}</span>
+              <span style="background:#F5EBD8;color:#8B5E3C;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:9999px;">{{ b.tag2 }}</span>
+            </div>
+            <span style="font-size:13px;color:#8A7F78;">{{ b.pages }}</span>
+          </div>
+        </div>
+      </article>
+    </sc-for>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ BOOK DETAIL ============ -->
+<sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:1120px;margin:0 auto;padding:36px 24px 90px;animation:fadeup .4s ease;">
+  <span onClick="{{ goStories }}" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:#8A7F78;cursor:pointer;margin-bottom:26px;" style-hover="color:#3D2B1F;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ s.allStories }}</span>
+
+  <div style="display:grid;grid-template-columns:.85fr 1.15fr;gap:52px;align-items:start;">
+    <div style="position:relative;aspect-ratio:3/4;border-radius:20px;overflow:hidden;background:{{ currentBook.cover }};box-shadow:6px 6px 0 rgba(61,43,31,.15),0 16px 48px rgba(26,23,20,.16);"></div>
+    <div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <span style="background:#F5EBD8;color:#8B5E3C;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:5px 12px;border-radius:9999px;">{{ currentBook.age }} {{ s.ageYears }}</span>
+        <span style="background:#E0EDE4;color:#2D5E3A;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:5px 12px;border-radius:9999px;">{{ currentBook.pages }}</span>
+      </div>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:44px;line-height:1.1;color:#3D2B1F;margin:0;">{{ currentBook.title }}</h1>
+      <p style="font-size:18px;color:#8A7F78;margin:18px 0 0;line-height:1.6;max-width:520px;">{{ currentBook.desc }}</p>
+      <div style="display:flex;align-items:baseline;gap:12px;margin:26px 0;">
+        <span style="font-weight:700;font-size:32px;color:#1A1714;">{{ currentBook.price }}</span>
+        <span style="font-size:14px;color:#8A7F78;">{{ s.perBook }}</span>
+      </div>
+      <div style="display:flex;gap:14px;">
+        <button onClick="{{ personaliseCurrent }}" style="background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:15px 34px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ s.personalise }}</button>
+        <button onClick="{{ previewCurrent }}" style="background:transparent;border:2px solid #3D2B1F;color:#3D2B1F;font-weight:600;font-size:15px;padding:13px 30px;border-radius:9999px;cursor:pointer;" style-hover="background:#3D2B1F;color:#fff;">{{ s.seePreview }}</button>
+      </div>
+      <div style="display:flex;gap:24px;margin-top:30px;padding-top:26px;border-top:1px solid #E2DDD6;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#8A7F78;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.7"><path d="M12 3l7 2.5v5c0 4.6-3 8-7 9.5-4-1.5-7-4.9-7-9.5v-5L12 3Z"/></svg>{{ s.trust2 }}</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#8A7F78;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.7"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/></svg>{{ s.trust3 }}</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#8A7F78;"><svg width="16" height="16" viewBox="0 0 24 24" fill="#C4714A"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5L2.6 9.8l6.5-.9L12 2.5Z"/></svg>{{ s.trust1 }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:64px;">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:28px;color:#3D2B1F;margin:0 0 24px;">{{ s.whatInside }}</h2>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;">
+      <sc-for list="{{ scenes }}" as="sc" hint-placeholder-count="5">
+        <div onClick="{{ sc.openPreview }}" style="aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:{{ sc.cover }};cursor:pointer;box-shadow:0 2px 12px rgba(26,23,20,.08);position:relative;transition:transform .25s ease;" style-hover="transform:scale(1.04);">
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,20,.6),transparent 55%);display:flex;align-items:flex-end;padding:10px;"><span style="font-family:'Playfair Display',serif;font-style:italic;font-size:12px;color:#fff;">{{ sc.title }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="margin-top:64px;">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:28px;color:#3D2B1F;margin:0 0 24px;">{{ s.similar }}</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <sc-for list="{{ similarBooks }}" as="b" hint-placeholder-count="2">
+        <article style="background:#fff;border-radius:20px;box-shadow:0 2px 12px rgba(26,23,20,.08);overflow:hidden;transition:all .3s ease;" style-hover="transform:translateY(-4px);box-shadow:0 8px 32px rgba(26,23,20,.12);">
+          <div onClick="{{ b.detail }}" style="position:relative;aspect-ratio:3/4;overflow:hidden;background:{{ b.cover }};cursor:pointer;"></div>
+          <div style="padding:16px;display:flex;justify-content:space-between;align-items:center;">
+            <h3 onClick="{{ b.detail }}" style="font-family:'Playfair Display',serif;font-weight:600;font-size:16px;color:#3D2B1F;margin:0;cursor:pointer;">{{ b.title }}</h3>
+            <span style="font-weight:700;font-size:16px;color:#1A1714;">{{ b.price }}</span>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ CUSTOMIZE ============ -->
+<sc-if value="{{ isCustomize }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:1120px;margin:0 auto;padding:44px 24px 90px;animation:fadeup .4s ease;">
+  <span onClick="{{ goStories }}" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:#8A7F78;cursor:pointer;margin-bottom:22px;" style-hover="color:#3D2B1F;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ s.changeStory }}</span>
+
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:38px;">
+    <span style="display:flex;align-items:center;gap:9px;"><span style="width:28px;height:28px;border-radius:9999px;background:#3D2B1F;color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">1</span><span style="font-size:14px;font-weight:600;color:#3D2B1F;">{{ s.custStep1 }}</span></span>
+    <span style="flex:1;height:1.5px;background:#E2DDD6;max-width:60px;"></span>
+    <span style="display:flex;align-items:center;gap:9px;"><span style="width:28px;height:28px;border-radius:9999px;background:#fff;border:1.5px solid #E2DDD6;color:#8A7F78;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;">2</span><span style="font-size:14px;color:#8A7F78;">{{ s.custStep2 }}</span></span>
+    <span style="flex:1;height:1.5px;background:#E2DDD6;max-width:60px;"></span>
+    <span style="display:flex;align-items:center;gap:9px;"><span style="width:28px;height:28px;border-radius:9999px;background:#fff;border:1.5px solid #E2DDD6;color:#8A7F78;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;">3</span><span style="font-size:14px;color:#8A7F78;">{{ s.custStep3 }}</span></span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:44px;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div style="background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:24px;box-shadow:0 1px 4px rgba(26,23,20,.06);">
+        <p style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:#C4714A;margin:0 0 14px;">{{ s.roleChild }}</p>
+        <label style="font-size:13px;color:#8A7F78;display:block;margin-bottom:7px;">{{ s.childNameLabel }}</label>
+        <input value="{{ childName }}" onInput="{{ setName }}" placeholder="{{ s.namePlaceholder }}" style="width:100%;height:48px;border:1.5px solid #E2DDD6;border-radius:12px;padding:0 15px;font-size:16px;color:#1A1714;outline:none;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+
+        <p style="font-size:13px;color:#8A7F78;margin:22px 0 10px;">{{ s.uploadTitle }}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div onClick="{{ upload0 }}" style="{{ slot0Style }}">
+            <sc-if value="{{ slot0Empty }}" hint-placeholder-val="{{ true }}">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#E8C5A0" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2.5"/><circle cx="12" cy="13.5" r="3.4"/><path d="M8.5 7l1.2-2.2h4.6L15.5 7"/></svg>
+              <span style="font-size:13px;font-weight:500;color:#8A7F78;margin-top:8px;">{{ s.dropPhoto }}</span>
+              <span style="font-size:11px;color:#8A7F78;margin-top:3px;">{{ s.slot1sub }}</span>
+            </sc-if>
+            <sc-if value="{{ slot0Full }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:9999px;background:#4A7C59;display:flex;align-items:center;justify-content:center;z-index:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </sc-if>
+          </div>
+          <div onClick="{{ upload1 }}" style="{{ slot1Style }}">
+            <sc-if value="{{ slot1Empty }}" hint-placeholder-val="{{ true }}">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#E8C5A0" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2.5"/><circle cx="12" cy="13.5" r="3.4"/><path d="M8.5 7l1.2-2.2h4.6L15.5 7"/></svg>
+              <span style="font-size:13px;font-weight:500;color:#8A7F78;margin-top:8px;">{{ s.dropPhoto }}</span>
+              <span style="font-size:11px;color:#8A7F78;margin-top:3px;">{{ s.slot2sub }}</span>
+            </sc-if>
+            <sc-if value="{{ slot1Full }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:9999px;background:#4A7C59;display:flex;align-items:center;justify-content:center;z-index:1;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </sc-if>
+          </div>
+        </div>
+        <p style="text-align:center;font-size:13px;font-weight:500;margin:14px 0 0;color:{{ counterColor }};">{{ counterText }}</p>
+      </div>
+
+      <div onClick="{{ toggleParent }}" style="{{ parentCardStyle }}">
+        <span style="font-size:20px;line-height:1;color:#8A7F78;">{{ parentSign }}</span>
+        <span style="font-size:15px;font-weight:500;color:#8A7F78;">{{ s.addParent }}</span>
+      </div>
+
+      <button onClick="{{ startProcessing }}" style="background:#4A7C59;color:#fff;font-weight:600;font-size:15px;letter-spacing:.02em;padding:15px 34px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;align-self:flex-start;" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ s.createBook }}</button>
+    </div>
+
+    <div style="position:sticky;top:92px;">
+      <p style="font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:#8A7F78;margin:0 0 14px;">{{ s.previewLabel }}</p>
+      <div style="position:relative;transform:rotate(-1deg);width:78%;max-width:280px;aspect-ratio:3/4;border-radius:14px;overflow:hidden;box-shadow:6px 6px 0 rgba(61,43,31,.15),0 14px 34px rgba(26,23,20,.16);background:{{ currentBook.cover }};">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,20,.62),transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:22px;">
+          <div style="font-family:'Playfair Display',serif;font-weight:600;font-size:22px;color:#fff;line-height:1.15;">{{ currentBook.title }}</div>
+          <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:16px;color:#E8C5A0;margin-top:8px;">{{ previewStarring }} {{ previewName }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ PROCESSING ============ -->
+<sc-if value="{{ isProcessing }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:560px;margin:0 auto;padding:56px 24px 90px;text-align:center;animation:fadeup .4s ease;">
+  <div style="width:120px;height:120px;margin:0 auto;animation:floaty 2.4s ease-in-out infinite;">
+    <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+      <path d="M60 40C52 32 40 30 22 32V88c18-2 30 0 38 8 8-8 20-10 38-8V32c-18-2-30 0-38 8Z" stroke="#3D2B1F" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M60 40V96" stroke="#3D2B1F" stroke-width="2.4"/>
+      <path d="M84 20l1.6 4 4 1.6-4 1.6L84 31l-1.6-3.8-4-1.6 4-1.6L84 20Z" fill="#E8C5A0"/>
+      <path d="M96 40l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2 1.2-3Z" fill="#4A7C59"/>
+      <path d="M30 24l1 2.5 2.5 1-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1 1-2.5Z" fill="#C4714A"/>
+    </svg>
+  </div>
+  <h1 style="font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:32px;color:#3D2B1F;margin:24px 0 0;">{{ procHeading }}</h1>
+  <p style="font-size:15px;color:#8A7F78;margin:12px 0 0;">{{ s.procSub }}</p>
+
+  <div style="margin-top:40px;text-align:left;">
+    <sc-for list="{{ pipeline }}" as="st" hint-placeholder-count="7">
+      <div style="{{ st.rowStyle }}min-height:56px;padding:0 16px;border-radius:12px;display:flex;align-items:center;gap:16px;margin-bottom:8px;transition:all .2s ease;">
+        <sc-if value="{{ st.done }}" hint-placeholder-val="{{ false }}"><span style="width:22px;height:22px;border-radius:9999px;background:#4A7C59;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></sc-if>
+        <sc-if value="{{ st.active }}" hint-placeholder-val="{{ true }}"><span style="width:20px;height:20px;border:2.5px solid #E8C5A0;border-top-color:#4A7C59;border-radius:9999px;animation:spin .8s linear infinite;flex-shrink:0;"></span></sc-if>
+        <sc-if value="{{ st.pending }}" hint-placeholder-val="{{ false }}"><span style="width:20px;height:20px;border:2px solid #E2DDD6;border-radius:9999px;flex-shrink:0;"></span></sc-if>
+        <sc-if value="{{ st.failed }}" hint-placeholder-val="{{ false }}"><span style="width:22px;height:22px;border-radius:9999px;background:#C0392B;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M7 7l10 10M17 7L7 17" stroke-linecap="round"/></svg></span></sc-if>
+        <span style="{{ st.labelStyle }}font-size:15px;flex:1;">{{ st.label }}</span>
+        <sc-if value="{{ st.active }}" hint-placeholder-val="{{ true }}"><span style="width:80px;height:4px;border-radius:9999px;background:#EADFCF;overflow:hidden;flex-shrink:0;"><span style="display:block;height:100%;background:#4A7C59;border-radius:9999px;width:{{ st.pct }};transition:width .1s linear;"></span></span></sc-if>
+        <sc-if value="{{ st.failed }}" hint-placeholder-val="{{ false }}"><button onClick="{{ retry }}" style="background:transparent;border:none;color:#C0392B;font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;">{{ s.retry }}</button></sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ pipelineDone }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ goPreview }}" style="margin-top:26px;background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:15px 40px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;animation:fadeup .4s ease;" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ s.seeBook }}</button>
+  </sc-if>
+
+  <div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:34px;font-size:13px;color:#8A7F78;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A7F78" stroke-width="1.6"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{{ s.procPrivacy }}
+  </div>
+  <sc-if value="{{ pipelineRunning }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:14px;"><button onClick="{{ simFail }}" style="background:transparent;border:none;color:#8A7F78;font-size:12px;cursor:pointer;text-decoration:underline;">{{ s.simFail }}</button></div>
+  </sc-if>
+</main>
+</sc-if>
+
+<!-- ============ PREVIEW (dark) ============ -->
+<sc-if value="{{ isPreview }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;background:#1A1714;display:flex;flex-direction:column;animation:fadeup .4s ease;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 26px;">
+    <span onClick="{{ goCustomize }}" style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;" style-hover="color:#fff;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ s.back }}</span>
+    <span style="font-family:'Playfair Display',serif;font-weight:600;font-size:18px;color:rgba(255,255,255,.85);">{{ currentBook.title }}</span>
+    <button onClick="{{ addToCart }}" style="background:#4A7C59;color:#fff;font-weight:600;font-size:14px;padding:11px 24px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.4);cursor:pointer;" style-hover="filter:brightness(1.08);">{{ s.addCart }}</button>
+  </div>
+
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;padding:10px 70px;">
+    <button onClick="{{ prevPage }}" style="position:absolute;left:22px;width:48px;height:48px;border-radius:9999px;background:rgba(255,255,255,.12);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;" style-hover="background:rgba(255,255,255,.24);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+
+    <div style="position:relative;max-width:820px;width:100%;aspect-ratio:4/3;border-radius:12px;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.5);background:{{ currentScene.cover }};">
+      <div style="position:absolute;left:32px;bottom:32px;background:rgba(250,247,242,.92);border-radius:10px;padding:10px 16px;max-width:260px;">
+        <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:#1A1714;line-height:1.6;">{{ currentScene.caption }}</span>
+      </div>
+    </div>
+
+    <button onClick="{{ nextPage }}" style="position:absolute;right:22px;width:48px;height:48px;border-radius:9999px;background:rgba(255,255,255,.12);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;" style-hover="background:rgba(255,255,255,.24);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <div style="text-align:center;padding-bottom:6px;">
+    <div style="font-size:13px;color:rgba(255,255,255,.6);">{{ pageCounter }}</div>
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:15px;color:rgba(255,255,255,.5);margin-top:3px;">{{ currentScene.title }}</div>
+  </div>
+
+  <div style="display:flex;gap:8px;overflow-x:auto;padding:14px 20px 20px;background:rgba(0,0,0,.3);justify-content:center;">
+    <sc-for list="{{ scenes }}" as="sc" hint-placeholder-count="5">
+      <div onClick="{{ sc.go }}" style="{{ sc.thumbStyle }}width:60px;height:45px;border-radius:6px;overflow:hidden;flex-shrink:0;cursor:pointer;background:{{ sc.cover }};transition:all .2s ease;"></div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ CART ============ -->
+<sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:1000px;margin:0 auto;padding:44px 24px 90px;animation:fadeup .4s ease;">
+  <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:40px;color:#3D2B1F;margin:0 0 32px;">{{ s.cartTitle }}</h1>
+
+  <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="text-align:center;padding:70px 20px;background:#fff;border:1px solid #E2DDD6;border-radius:20px;">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#E8C5A0" stroke-width="1.4" style="margin:0 auto;"><path d="M4 5h2l1.6 10.2a1 1 0 0 0 1 .8h7.8a1 1 0 0 0 1-.8L20 8H6.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>
+      <p style="font-size:17px;color:#8A7F78;margin:18px 0 22px;">{{ s.cartEmpty }}</p>
+      <button onClick="{{ goStories }}" style="background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:14px 32px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;">{{ s.cartBrowse }}</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cartHasItems }}" hint-placeholder-val="{{ true }}">
+    <div style="display:grid;grid-template-columns:1.5fr .9fr;gap:32px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <sc-for list="{{ cartItems }}" as="it" hint-placeholder-count="2">
+          <div style="display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:16px;box-shadow:0 1px 4px rgba(26,23,20,.06);">
+            <div style="width:64px;height:84px;border-radius:6px;overflow:hidden;flex-shrink:0;background:{{ it.cover }};box-shadow:2px 2px 0 rgba(61,43,31,.12);"></div>
+            <div style="flex:1;">
+              <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:16px;color:#3D2B1F;margin:0;">{{ it.title }}</h3>
+              <p style="font-size:13px;color:#8A7F78;margin:4px 0 0;">{{ it.characters }}</p>
+              <span style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;color:#8A7F78;background:#F5EBD8;padding:2px 8px;border-radius:6px;margin-top:8px;">{{ it.version }}</span>
+              <div style="font-weight:700;font-size:17px;color:#1A1714;margin-top:10px;">{{ it.price }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <button onClick="{{ it.dec }}" style="width:28px;height:28px;border-radius:9999px;border:1px solid #E2DDD6;background:#fff;color:#3D2B1F;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;" style-hover="border-color:#3D2B1F;">−</button>
+                <span style="font-weight:600;font-size:15px;color:#3D2B1F;min-width:16px;text-align:center;">{{ it.qty }}</span>
+                <button onClick="{{ it.inc }}" style="width:28px;height:28px;border-radius:9999px;border:1px solid #E2DDD6;background:#fff;color:#3D2B1F;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;" style-hover="border-color:#3D2B1F;">+</button>
+              </div>
+              <button onClick="{{ it.remove }}" style="background:transparent;border:none;color:#C0392B;font-size:12px;cursor:pointer;" style-hover="text-decoration:underline;">{{ s.remove }}</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="position:sticky;top:92px;background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(26,23,20,.08);">
+        <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:18px;color:#3D2B1F;margin:0 0 18px;">{{ s.summary }}</h3>
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:#8A7F78;margin-bottom:10px;"><span>{{ s.subtotal }}</span><span style="color:#1A1714;font-weight:500;">{{ subtotal }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;color:#8A7F78;margin-bottom:16px;"><span>{{ s.shipping }}</span><span style="color:#1A1714;font-weight:500;">{{ shipping }}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:17px;font-weight:700;color:#1A1714;padding-top:16px;border-top:1px solid #E2DDD6;"><span>{{ s.total }}</span><span>{{ total }}</span></div>
+        <button onClick="{{ goCheckout }}" style="width:100%;margin-top:20px;background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:14px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);">{{ s.checkoutBtn }}</button>
+        <p style="text-align:center;font-size:12px;color:#8A7F78;margin:14px 0 0;display:flex;align-items:center;justify-content:center;gap:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8A7F78" stroke-width="1.6"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{{ s.securePay }}</p>
+      </div>
+    </div>
+  </sc-if>
+</main>
+</sc-if>
+
+<!-- ============ CHECKOUT ============ -->
+<sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:1000px;margin:0 auto;padding:44px 24px 90px;animation:fadeup .4s ease;">
+  <span onClick="{{ goCart }}" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;color:#8A7F78;cursor:pointer;margin-bottom:22px;" style-hover="color:#3D2B1F;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ s.backCart }}</span>
+  <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:40px;color:#3D2B1F;margin:0 0 32px;">{{ s.checkoutTitle }}</h1>
+
+  <div style="display:grid;grid-template-columns:1.3fr .9fr;gap:40px;align-items:start;">
+    <div style="display:flex;flex-direction:column;gap:34px;">
+      <div>
+        <p style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#8A7F78;margin:0 0 6px;">{{ s.secDelivery }}</p>
+        <div style="height:1px;background:#E2DDD6;margin-bottom:18px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <input placeholder="{{ s.firstName }}" style="{{ inputStyle }}" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+          <input placeholder="{{ s.lastName }}" style="{{ inputStyle }}" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+          <input placeholder="{{ s.address }}" style="{{ inputStyle }}grid-column:1/3;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+          <input placeholder="{{ s.postcode }}" style="{{ inputStyle }}" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+          <input placeholder="{{ s.city }}" style="{{ inputStyle }}" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+        </div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <p style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#8A7F78;margin:0;">{{ s.secPayment }}</p>
+          <span style="font-size:12px;color:#8A7F78;display:flex;align-items:center;gap:5px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{{ s.viaStripe }}</span>
+        </div>
+        <div style="height:1px;background:#E2DDD6;margin-bottom:18px;"></div>
+        <input placeholder="{{ s.cardNumber }}" style="{{ inputStyle }}font-family:'JetBrains Mono',monospace;letter-spacing:.08em;margin-bottom:14px;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <input placeholder="MM / YY" style="{{ inputStyle }}font-family:'JetBrains Mono',monospace;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+          <input placeholder="CVC" style="{{ inputStyle }}font-family:'JetBrains Mono',monospace;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+        </div>
+      </div>
+      <label onClick="{{ toggleGdpr }}" style="display:flex;gap:12px;align-items:flex-start;cursor:pointer;">
+        <span style="{{ gdprBoxStyle }}">{{ gdprCheck }}</span>
+        <span style="font-size:14px;color:#1A1714;line-height:1.5;">{{ s.gdprConsent }}</span>
+      </label>
+    </div>
+
+    <div style="position:sticky;top:92px;background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:24px;box-shadow:0 2px 12px rgba(26,23,20,.08);">
+      <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:18px;color:#3D2B1F;margin:0 0 16px;">{{ s.summary }}</h3>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
+        <sc-for list="{{ cartItems }}" as="it" hint-placeholder-count="2">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div style="width:40px;height:52px;border-radius:5px;overflow:hidden;flex-shrink:0;background:{{ it.cover }};"></div>
+            <div style="flex:1;"><div style="font-size:14px;font-weight:600;color:#3D2B1F;">{{ it.title }}</div><div style="font-size:12px;color:#8A7F78;">{{ s.qtyShort }} {{ it.qty }}</div></div>
+            <span style="font-size:14px;font-weight:600;color:#1A1714;">{{ it.lineTotal }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;color:#8A7F78;margin-bottom:10px;padding-top:14px;border-top:1px solid #E2DDD6;"><span>{{ s.subtotal }}</span><span style="color:#1A1714;">{{ subtotal }}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;color:#8A7F78;margin-bottom:16px;"><span>{{ s.shipping }}</span><span style="color:#1A1714;">{{ shipping }}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:17px;font-weight:700;color:#1A1714;padding-top:16px;border-top:1px solid #E2DDD6;"><span>{{ s.total }}</span><span>{{ total }}</span></div>
+      <button onClick="{{ placeOrder }}" style="width:100%;margin-top:20px;background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:15px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);">{{ payLabel }}</button>
+    </div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ FAQ ============ -->
+<sc-if value="{{ isFaq }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:760px;margin:0 auto;padding:56px 24px 90px;animation:fadeup .4s ease;">
+  <h1 style="text-align:center;font-family:'Playfair Display',serif;font-weight:700;font-size:44px;color:#3D2B1F;margin:0;">{{ s.faqTitle }}</h1>
+  <p style="text-align:center;font-size:17px;color:#8A7F78;margin:16px 0 30px;">{{ s.faqSub }}</p>
+
+  <div style="position:relative;margin-bottom:34px;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A7F78" stroke-width="1.7" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4" stroke-linecap="round"/></svg>
+    <input value="{{ faqQuery }}" onInput="{{ setFaqQuery }}" placeholder="{{ s.faqSearch }}" style="width:100%;height:52px;border:1.5px solid #E2DDD6;border-radius:12px;padding:0 16px 0 44px;font-size:15px;outline:none;background:#fff;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:10px;">
+    <sc-for list="{{ faqItems }}" as="q" hint-placeholder-count="6">
+      <div style="border:1px solid #E2DDD6;border-radius:16px;background:#fff;overflow:hidden;">
+        <button onClick="{{ q.toggle }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;background:transparent;border:none;cursor:pointer;text-align:left;">
+          <span style="font-size:15px;font-weight:600;color:#3D2B1F;">{{ q.question }}</span>
+          <span style="{{ q.iconStyle }}flex-shrink:0;color:#C4714A;font-size:22px;transition:transform .25s ease;">+</span>
+        </button>
+        <sc-if value="{{ q.open }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:0 20px 20px;font-size:14px;color:#8A7F78;line-height:1.6;">{{ q.answer }}</div>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ faqNoResults }}" hint-placeholder-val="{{ false }}">
+    <p style="text-align:center;color:#8A7F78;font-size:15px;padding:40px 0;">{{ s.faqNone }}</p>
+  </sc-if>
+</main>
+</sc-if>
+
+<!-- ============ ADMIN ============ -->
+<sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;min-height:100vh;background:#F5F3F0;animation:fadeup .3s ease;">
+  <aside style="width:240px;background:#3D2B1F;flex-shrink:0;display:flex;flex-direction:column;padding:24px 16px;">
+    <div style="display:flex;align-items:center;gap:9px;padding:0 8px 24px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="color:#E8C5A0;"><path d="M12 6.5C10.5 5 8 4.5 4 4.8V18c4-.3 6.5.2 8 1.7 1.5-1.5 4-2 8-1.7V4.8c-4-.3-6.5.2-8 1.7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6.5V19.7" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span style="font-family:'Playfair Display',serif;font-weight:600;font-size:19px;color:#fff;">Imagitale</span>
+    </div>
+    <sc-for list="{{ adminNav }}" as="n" hint-placeholder-count="4">
+      <button onClick="{{ n.go }}" style="{{ n.style }}display:flex;align-items:center;gap:11px;padding:11px 12px;border:none;border-radius:12px;font-family:'DM Sans';font-size:14px;font-weight:500;cursor:pointer;text-align:left;margin-bottom:4px;transition:all .15s ease;">{{ n.label }}</button>
+    </sc-for>
+    <div style="margin-top:auto;padding:0 8px;">
+      <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:8px;background:transparent;border:none;color:rgba(255,255,255,.5);font-size:13px;cursor:pointer;" style-hover="color:#fff;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ s.exitAdmin }}</button>
+    </div>
+  </aside>
+
+  <div style="flex:1;padding:36px 40px;overflow:auto;">
+    <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:30px;color:#3D2B1F;margin:0 0 6px;">{{ adminHeading }}</h1>
+    <p style="font-size:14px;color:#8A7F78;margin:0 0 30px;">{{ adminSub }}</p>
+
+    <!-- Overview -->
+    <sc-if value="{{ adminOverview }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:30px;">
+        <sc-for list="{{ adminStats }}" as="c" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2DDD6;border-radius:16px;padding:20px;box-shadow:0 1px 4px rgba(26,23,20,.06);">
+            <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#8A7F78;">{{ c.label }}</div>
+            <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:32px;color:{{ c.color }};margin-top:8px;">{{ c.value }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:18px;">
+        <div style="background:#fff;border:1px solid #E2DDD6;border-radius:16px;padding:22px;">
+          <h3 style="font-size:14px;font-weight:600;color:#3D2B1F;margin:0 0 20px;">{{ s.ordersPerDay }}</h3>
+          <div style="display:flex;align-items:flex-end;gap:14px;height:150px;">
+            <sc-for list="{{ adminChart }}" as="d" hint-placeholder-count="7">
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;">
+                <div style="width:100%;max-width:34px;background:#4A7C59;border-radius:6px 6px 0 0;height:{{ d.h }};transition:height .4s ease;"></div>
+                <span style="font-size:11px;color:#8A7F78;">{{ d.day }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #E2DDD6;border-radius:16px;padding:22px;">
+          <h3 style="font-size:14px;font-weight:600;color:#3D2B1F;margin:0 0 16px;">{{ s.recentActivity }}</h3>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <sc-for list="{{ adminActivity }}" as="a" hint-placeholder-count="5">
+              <div style="display:flex;gap:12px;font-size:13px;">
+                <span style="font-family:'JetBrains Mono',monospace;color:#8A7F78;flex-shrink:0;">{{ a.time }}</span>
+                <span style="color:#1A1714;line-height:1.4;">{{ a.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- Jobs -->
+    <sc-if value="{{ adminJobs }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E2DDD6;border-radius:16px;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:1.2fr 1.2fr 1.4fr 1fr .8fr .8fr;gap:12px;padding:14px 20px;background:#F9F7F5;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#8A7F78;">
+          <span>Job</span><span>Session</span><span>Stage</span><span>Status</span><span>Started</span><span>Duration</span>
+        </div>
+        <sc-for list="{{ jobRows }}" as="j" hint-placeholder-count="6">
+          <div style="{{ j.rowBg }}display:grid;grid-template-columns:1.2fr 1.2fr 1.4fr 1fr .8fr .8fr;gap:12px;padding:14px 20px;font-size:13px;align-items:center;border-top:1px solid #E2DDD6;">
+            <span style="font-family:'JetBrains Mono',monospace;color:#1A1714;">{{ j.id }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:#8A7F78;">{{ j.session }}</span>
+            <span style="color:#1A1714;">{{ j.stage }}</span>
+            <span><span style="{{ j.badge }}font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:9999px;">{{ j.status }}</span></span>
+            <span style="font-family:'JetBrains Mono',monospace;color:#8A7F78;">{{ j.started }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;color:#8A7F78;">{{ j.duration }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- Orders -->
+    <sc-if value="{{ adminOrders }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border:1px solid #E2DDD6;border-radius:16px;overflow:hidden;">
+        <div style="display:grid;grid-template-columns:1.4fr 1.4fr .7fr .8fr 1fr 1fr;gap:12px;padding:14px 20px;background:#F9F7F5;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#8A7F78;">
+          <span>Order</span><span>Customer</span><span>Books</span><span>Total</span><span>Status</span><span>Created</span>
+        </div>
+        <sc-for list="{{ orderRows }}" as="o" hint-placeholder-count="5">
+          <div style="{{ o.rowBg }}display:grid;grid-template-columns:1.4fr 1.4fr .7fr .8fr 1fr 1fr;gap:12px;padding:14px 20px;font-size:13px;align-items:center;border-top:1px solid #E2DDD6;">
+            <span style="font-family:'JetBrains Mono',monospace;color:#1A1714;">{{ o.id }}</span>
+            <span style="color:#1A1714;">{{ o.customer }}</span>
+            <span style="color:#8A7F78;">{{ o.books }}</span>
+            <span style="color:#1A1714;font-weight:600;">{{ o.total }}</span>
+            <span><span style="{{ o.badge }}font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:9999px;">{{ o.status }}</span></span>
+            <span style="font-family:'JetBrains Mono',monospace;color:#8A7F78;">{{ o.created }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- Storage -->
+    <sc-if value="{{ adminStorage }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <sc-for list="{{ storageCats }}" as="c" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #E2DDD6;border-radius:16px;padding:20px;">
+            <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px;"><span style="font-weight:600;color:#3D2B1F;">{{ c.label }}</span><span style="color:#8A7F78;">{{ c.total }}</span></div>
+            <div style="height:8px;border-radius:9999px;background:#EFE9E1;overflow:hidden;"><div style="height:100%;border-radius:9999px;background:#4A7C59;width:{{ c.pct }};"></div></div>
+            <div style="font-size:12px;color:#8A7F78;margin-top:8px;">{{ c.pct }} {{ s.used }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ LOGIN ============ -->
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:440px;margin:0 auto;padding:60px 24px 90px;animation:fadeup .4s ease;">
+  <div style="background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:36px;box-shadow:0 8px 32px rgba(26,23,20,.10);">
+    <sc-if value="{{ magicSent }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;">
+        <div style="width:56px;height:56px;margin:0 auto;border-radius:9999px;background:#EEF5F8;display:flex;align-items:center;justify-content:center;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2A6070" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5 12 13l8.5-6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:24px;color:#3D2B1F;margin:18px 0 8px;">{{ au.checkInbox }}</h2>
+        <p style="font-size:14px;color:#8A7F78;line-height:1.55;margin:0 0 18px;">{{ au.sentBody }}</p>
+        <button onClick="{{ doLogin }}" style="background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:13px 30px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;">{{ au.signIn }}</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ loginForm }}" hint-placeholder-val="{{ true }}">
+      <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:26px;color:#3D2B1F;margin:0;">{{ au.welcome }}</h2>
+      <p style="font-size:14px;color:#8A7F78;margin:6px 0 0;">{{ au.sub }}</p>
+
+      <div style="display:flex;gap:4px;margin:22px 0 20px;padding:4px;border:1px solid #E2DDD6;border-radius:9999px;background:#FAF7F2;">
+        <button onClick="{{ setMagicTab }}" style="{{ au.magicTabStyle }}">{{ au.magicTab }}</button>
+        <button onClick="{{ setPassTab }}" style="{{ au.passTabStyle }}">{{ au.passwordTab }}</button>
+      </div>
+
+      <input value="{{ loginEmail }}" onInput="{{ setLoginEmail }}" placeholder="{{ au.email }}" style="{{ inputStyle }}margin-bottom:14px;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+      <sc-if value="{{ au.showPass }}" hint-placeholder-val="{{ true }}">
+        <input type="password" placeholder="{{ au.password }}" style="{{ inputStyle }}margin-bottom:10px;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+        <div style="text-align:right;margin-bottom:16px;"><span style="font-size:13px;color:#4A7C59;cursor:pointer;" style-hover="text-decoration:underline;">{{ au.forgot }}</span></div>
+      </sc-if>
+      <sc-if value="{{ au.isMagic }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ sendMagic }}" style="width:100%;background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:14px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);">{{ au.sendLink }}</button>
+      </sc-if>
+      <sc-if value="{{ au.showPass }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ doLogin }}" style="width:100%;background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:14px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);">{{ au.signIn }}</button>
+      </sc-if>
+      <p style="font-size:12px;color:#8A7F78;text-align:center;margin:14px 0 0;">{{ au.hint }}</p>
+
+      <div style="margin-top:22px;padding-top:20px;border-top:1px solid #E2DDD6;text-align:center;">
+        <p style="font-size:13px;color:#8A7F78;margin:0 0 8px;">{{ au.newHere }}</p>
+        <span onClick="{{ goStories }}" style="font-size:14px;font-weight:500;color:#4A7C59;cursor:pointer;" style-hover="text-decoration:underline;">{{ au.browse }}</span>
+      </div>
+    </sc-if>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ ACCOUNT ============ -->
+<sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:1000px;margin:0 auto;padding:44px 24px 90px;animation:fadeup .4s ease;">
+  <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:40px;color:#3D2B1F;margin:0;">{{ ac.title }}</h1>
+  <p style="font-size:14px;color:#8A7F78;margin:6px 0 0;">{{ userName }} · {{ userEmail }}</p>
+
+  <div style="display:grid;grid-template-columns:220px 1fr;gap:32px;margin-top:30px;align-items:start;">
+    <nav style="display:flex;flex-direction:column;gap:6px;">
+      <button onClick="{{ setTabOrders }}" style="{{ tabOrdersStyle }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3.5 8.5 12 4l8.5 4.5-8.5 4.5-8.5-4.5Z" stroke-linejoin="round"/><path d="M3.5 8.5v7L12 20l8.5-4.5v-7"/></svg>{{ ac.tabOrders }}</button>
+      <button onClick="{{ setTabData }}" style="{{ tabDataStyle }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>{{ ac.tabData }}</button>
+      <button onClick="{{ setTabSet }}" style="{{ tabSetStyle }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.4-2.3 1a7 7 0 0 0-1.7-1l-.3-2.5H9.4l-.3 2.5a7 7 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.5a7 7 0 0 0 0 2l-2 1.5 2 3.4 2.3-1a7 7 0 0 0 1.7 1l.3 2.5h5.2l.3-2.5a7 7 0 0 0 1.7-1l2.3 1 2-3.4-2-1.5c.1-.3.1-.7.1-1Z" stroke-linejoin="round"/></svg>{{ ac.tabSettings }}</button>
+      <button onClick="{{ logout }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:none;border-radius:12px;background:transparent;color:#C0392B;font-family:'DM Sans';font-size:14px;font-weight:500;cursor:pointer;text-align:left;margin-top:6px;" style-hover="background:#FDECEA;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M15 12H4M8 8l-4 4 4 4M14 4h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ ac.logout }}</button>
+    </nav>
+
+    <div>
+      <sc-if value="{{ acctOrdersView }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <sc-for list="{{ acctOrders }}" as="o" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:20px;box-shadow:0 1px 4px rgba(26,23,20,.06);">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                <div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#3D2B1F;">#{{ o.id }}</div><div style="font-size:12px;color:#8A7F78;margin-top:2px;">{{ o.date }}</div></div>
+                <span style="{{ o.statusBadge }}font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:4px 10px;border-radius:9999px;">{{ o.status }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+                <div style="width:44px;height:58px;border-radius:6px;overflow:hidden;flex-shrink:0;background:{{ o.cover }};box-shadow:2px 2px 0 rgba(61,43,31,.12);"></div>
+                <div style="flex:1;"><div style="font-family:'Playfair Display',serif;font-weight:600;font-size:15px;color:#3D2B1F;">{{ o.bookTitle }}</div><div style="font-size:12px;color:#8A7F78;">{{ o.chars }}</div></div>
+                <span style="font-weight:700;font-size:16px;color:#1A1714;">{{ o.total }}</span>
+              </div>
+              <div style="display:flex;gap:18px;margin-top:16px;padding-top:14px;border-top:1px solid #E2DDD6;">
+                <sc-if value="{{ o.hasTracking }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4A7C59;cursor:pointer;" style-hover="text-decoration:underline;">{{ ac.tracking }}: {{ o.tracking }}</span></sc-if>
+                <span style="font-size:13px;color:#8A7F78;cursor:pointer;" style-hover="color:#3D2B1F;text-decoration:underline;">{{ ac.receipt }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ acctDataView }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:26px;">
+          <div>
+            <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:20px;color:#3D2B1F;margin:0 0 4px;">{{ ac.photosTitle }}</h2>
+            <p style="font-size:13px;color:#8A7F78;margin:0 0 14px;">{{ ac.photosSub }}</p>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ acctOrders }}" as="o" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid #E2DDD6;border-radius:14px;padding:14px 16px;">
+                  <div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#3D2B1F;">#{{ o.id }}</div><div style="font-size:12px;color:#8A7F78;margin-top:2px;">{{ o.date }}</div></div>
+                  <div style="display:flex;align-items:center;gap:12px;">
+                    <span style="{{ o.photoBadge }}font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:4px 10px;border-radius:9999px;">{{ o.photoLabel }}</span>
+                    <sc-if value="{{ o.canDelete }}" hint-placeholder-val="{{ true }}"><button onClick="{{ o.del }}" style="background:#FDECEA;color:#C0392B;font-size:12px;font-weight:600;padding:7px 14px;border:none;border-radius:9999px;cursor:pointer;">{{ ac.deleteNow }}</button></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #E2DDD6;border-radius:16px;padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:#3D2B1F;margin:0 0 4px;">{{ ac.exportTitle }}</h3>
+            <p style="font-size:13px;color:#8A7F78;margin:0 0 14px;">{{ ac.exportDesc }}</p>
+            <button onClick="{{ exportData }}" style="background:transparent;border:2px solid #3D2B1F;color:#3D2B1F;font-weight:600;font-size:14px;padding:10px 22px;border-radius:9999px;cursor:pointer;" style-hover="background:#3D2B1F;color:#fff;">{{ ac.exportBtn }}</button>
+          </div>
+          <div style="border:1px solid rgba(192,57,43,.3);background:rgba(192,57,43,.05);border-radius:16px;padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:#C0392B;margin:0 0 4px;">{{ ac.dangerTitle }}</h3>
+            <p style="font-size:13px;color:#8A7F78;margin:0 0 14px;">{{ ac.dangerDesc }}</p>
+            <button style="background:#C0392B;color:#fff;font-weight:600;font-size:14px;padding:10px 22px;border:none;border-radius:9999px;cursor:pointer;" style-hover="filter:brightness(.94);">{{ ac.deleteAcct }}</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ acctSetView }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:26px;max-width:520px;box-shadow:0 1px 4px rgba(26,23,20,.06);">
+          <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:20px;color:#3D2B1F;margin:0 0 20px;">{{ ac.setTitle }}</h2>
+          <label style="display:block;font-size:13px;font-weight:500;color:#1A1714;margin-bottom:7px;">{{ ac.setName }}</label>
+          <input value="{{ userName }}" style="{{ inputStyle }}margin-bottom:18px;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+          <label style="display:block;font-size:13px;font-weight:500;color:#1A1714;margin-bottom:7px;">{{ ac.setEmail }}</label>
+          <input value="{{ userEmail }}" style="{{ inputStyle }}margin-bottom:18px;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+          <label style="display:block;font-size:13px;font-weight:500;color:#1A1714;margin-bottom:8px;">{{ ac.setLang }}</label>
+          <div style="display:inline-flex;padding:3px;border:1.5px solid #E2DDD6;border-radius:9999px;background:#fff;margin-bottom:20px;">
+            <button onClick="{{ setEn }}" style="{{ enSegStyle }}">EN</button>
+            <button onClick="{{ setFr }}" style="{{ frSegStyle }}">FR</button>
+          </div>
+          <label style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid #E2DDD6;margin-bottom:20px;">
+            <span style="font-size:14px;color:#1A1714;">{{ ac.setNotif }}</span>
+            <span style="width:16px;height:16px;border-radius:5px;background:#3D2B1F;display:flex;align-items:center;justify-content:center;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </label>
+          <button onClick="{{ saveSettings }}" style="background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:13px 30px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);">{{ ac.save }}</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ PRIVACY ============ -->
+<sc-if value="{{ isPrivacy }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:760px;margin:0 auto;padding:52px 24px 90px;animation:fadeup .4s ease;">
+  <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:40px;color:#3D2B1F;margin:0;">{{ pv.title }}</h1>
+  <p style="font-size:14px;color:#8A7F78;margin:8px 0 0;">{{ pv.updated }}</p>
+  <p style="font-size:16px;color:#1A1714;line-height:1.65;margin:24px 0 0;">{{ pv.intro }}</p>
+
+  <section style="border-top:1px solid #E2DDD6;margin-top:36px;padding-top:28px;">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:22px;color:#3D2B1F;margin:0 0 14px;"><span style="color:#E8C5A0;margin-right:8px;">1.</span>{{ pv.collectT }}</h2>
+    <ul style="margin:0;padding-left:20px;color:#1A1714;font-size:15px;line-height:1.9;">
+      <sc-for list="{{ pv.collect }}" as="c" hint-placeholder-count="4"><li>{{ c }}</li></sc-for>
+    </ul>
+  </section>
+
+  <section style="border-top:1px solid #E2DDD6;margin-top:28px;padding-top:28px;">
+    <div style="background:#EEF5F8;border-radius:16px;padding:26px;">
+      <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:22px;color:#3D2B1F;margin:0 0 14px;"><span style="color:rgba(61,43,31,.5);margin-right:8px;">2.</span>{{ pv.photoT }}</h2>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <sc-for list="{{ pv.photoBox }}" as="p" hint-placeholder-count="5">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:15px;color:#1A1714;line-height:1.5;"><span style="width:20px;height:20px;border-radius:9999px;background:#4A7C59;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{{ p }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="border-top:1px solid #E2DDD6;margin-top:28px;padding-top:28px;">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:22px;color:#3D2B1F;margin:0 0 16px;"><span style="color:#E8C5A0;margin-right:8px;">3.</span>{{ pv.rightsT }}</h2>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <sc-for list="{{ pv.rights }}" as="r" hint-placeholder-count="4">
+        <div><h3 style="font-size:15px;font-weight:600;color:#3D2B1F;margin:0 0 3px;">{{ r.name }}</h3><p style="font-size:14px;color:#8A7F78;margin:0;line-height:1.55;">{{ r.body }}</p></div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="border-top:1px solid #E2DDD6;margin-top:28px;padding-top:28px;">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:22px;color:#3D2B1F;margin:0 0 16px;"><span style="color:#E8C5A0;margin-right:8px;">4.</span>{{ pv.retentionT }}</h2>
+    <div style="border:1px solid #E2DDD6;border-radius:12px;overflow:hidden;">
+      <div style="display:grid;grid-template-columns:1.3fr 1.2fr 1fr;gap:12px;padding:12px 16px;background:#F9F7F5;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#8A7F78;">
+        <span>{{ pv.colType }}</span><span>{{ pv.colPeriod }}</span><span>{{ pv.colMethod }}</span>
+      </div>
+      <sc-for list="{{ pv.retention }}" as="r" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:1.3fr 1.2fr 1fr;gap:12px;padding:13px 16px;font-size:14px;border-top:1px solid #E2DDD6;"><span style="color:#1A1714;">{{ r.type }}</span><span style="color:#8A7F78;">{{ r.period }}</span><span style="color:#8A7F78;">{{ r.method }}</span></div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="border-top:1px solid #E2DDD6;margin-top:28px;padding-top:28px;">
+    <h2 style="font-family:'Playfair Display',serif;font-weight:600;font-size:22px;color:#3D2B1F;margin:0 0 12px;"><span style="color:#E8C5A0;margin-right:8px;">5.</span>{{ pv.contactT }}</h2>
+    <p style="font-size:15px;color:#1A1714;line-height:1.6;margin:0;">{{ pv.contactBody }}</p>
+  </section>
+</main>
+</sc-if>
+
+<!-- ============ CONTACT ============ -->
+<sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+<main style="max-width:900px;margin:0 auto;padding:52px 24px 90px;animation:fadeup .4s ease;">
+  <h1 style="font-family:'Playfair Display',serif;font-weight:700;font-size:44px;color:#3D2B1F;margin:0;">{{ ct.title }}</h1>
+  <p style="font-size:17px;color:#8A7F78;margin:16px 0 0;max-width:520px;">{{ ct.sub }}</p>
+
+  <div style="display:grid;grid-template-columns:1.3fr .7fr;gap:40px;margin-top:38px;align-items:start;">
+    <div style="background:#fff;border:1px solid #E2DDD6;border-radius:20px;padding:28px;box-shadow:0 2px 12px rgba(26,23,20,.08);display:flex;flex-direction:column;gap:16px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <input placeholder="{{ ct.name }}" style="{{ inputStyle }}" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+        <input placeholder="{{ ct.email }}" style="{{ inputStyle }}" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+      </div>
+      <input placeholder="{{ ct.subject }}" style="{{ inputStyle }}" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);">
+      <textarea placeholder="{{ ct.message }}" rows="5" style="border:1.5px solid #E2DDD6;border-radius:12px;padding:13px 15px;font-size:15px;color:#1A1714;outline:none;width:100%;background:#fff;resize:vertical;font-family:inherit;" style-focus="border-color:#3D2B1F;box-shadow:0 0 0 3px rgba(61,43,31,.08);"></textarea>
+      <button onClick="{{ contactSend }}" style="align-self:flex-start;background:#4A7C59;color:#fff;font-weight:600;font-size:15px;padding:14px 32px;border:none;border-radius:9999px;box-shadow:0 2px 8px rgba(74,124,89,.3);cursor:pointer;" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ ct.send }}</button>
+    </div>
+
+    <div style="background:#EEF5F8;border-radius:20px;padding:26px;">
+      <h3 style="font-family:'Playfair Display',serif;font-weight:600;font-size:18px;color:#3D2B1F;margin:0 0 20px;">{{ ct.infoT }}</h3>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;gap:12px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A6070" stroke-width="1.6" style="flex-shrink:0;margin-top:2px;"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5 12 13l8.5-6.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div><div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#8A7F78;">{{ ct.emailL }}</div><div style="font-size:14px;color:#1A1714;margin-top:3px;">hello@imagitale.com</div></div>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A6070" stroke-width="1.6" style="flex-shrink:0;margin-top:2px;"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round"/></svg>
+          <div><div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#8A7F78;">{{ ct.responseL }}</div><div style="font-size:14px;color:#1A1714;margin-top:3px;line-height:1.5;">{{ ct.response }}</div></div>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2A6070" stroke-width="1.6" style="flex-shrink:0;margin-top:2px;"><path d="M12 21s7-5.5 7-11a7 7 0 0 0-14 0c0 5.5 7 11 7 11Z" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div><div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#8A7F78;">{{ ct.addrL }}</div><div style="font-size:14px;color:#1A1714;margin-top:3px;line-height:1.5;">{{ ct.addr }}</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ FOOTER ============ -->
+<sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+<footer style="background:#3D2B1F;color:rgba(255,255,255,.7);padding:48px 24px 32px;">
+  <div style="max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;">
+    <div style="max-width:280px;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="color:#E8C5A0;"><path d="M12 6.5C10.5 5 8 4.5 4 4.8V18c4-.3 6.5.2 8 1.7 1.5-1.5 4-2 8-1.7V4.8c-4-.3-6.5.2-8 1.7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 6.5V19.7" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span style="font-family:'Playfair Display',serif;font-weight:600;font-size:20px;color:#fff;">Imagitale</span>
+      </div>
+      <p style="font-size:14px;line-height:1.6;margin:0;">{{ s.footerTag }}</p>
+    </div>
+    <div style="display:flex;gap:56px;flex-wrap:wrap;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <span style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);">{{ s.footerExplore }}</span>
+        <span onClick="{{ goStories }}" style="font-size:14px;cursor:pointer;color:rgba(255,255,255,.7);" style-hover="color:#fff;">{{ s.navStories }}</span>
+        <span onClick="{{ goFaq }}" style="font-size:14px;cursor:pointer;color:rgba(255,255,255,.7);" style-hover="color:#fff;">{{ s.navFaq }}</span>
+        <span onClick="{{ goCart }}" style="font-size:14px;cursor:pointer;color:rgba(255,255,255,.7);" style-hover="color:#fff;">{{ s.cartTitle }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <span style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);">{{ s.footerCompany }}</span>
+        <span onClick="{{ goAdmin }}" style="font-size:14px;cursor:pointer;color:rgba(255,255,255,.7);" style-hover="color:#fff;">{{ s.footerAdmin }}</span>
+        <span onClick="{{ goPrivacy }}" style="font-size:14px;cursor:pointer;color:rgba(255,255,255,.7);" style-hover="color:#fff;">{{ s.footerPrivacy }}</span>
+        <span onClick="{{ goContact }}" style="font-size:14px;cursor:pointer;color:rgba(255,255,255,.7);" style-hover="color:#fff;">{{ s.footerContact }}</span>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1120px;margin:32px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;color:rgba(255,255,255,.45);">{{ s.footerRights }}</div>
+</footer>
+</sc-if>
+
+<!-- Toast -->
+<sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+<div style="position:fixed;bottom:24px;right:24px;z-index:200;background:#3D2B1F;color:#fff;padding:14px 20px;border-radius:12px;box-shadow:0 16px 48px rgba(26,23,20,.16);font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px;animation:fadeup .3s cubic-bezier(0.34,1.56,0.64,1);">
+  <span style="width:20px;height:20px;border-radius:9999px;background:#4A7C59;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l4.5 4.5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  {{ toast }}
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'landing',
+    lang: 'en',
+    cartItems: [],
+    selBook: 0,
+    filter: 0,
+    childName: '',
+    slots: ['empty', 'empty'],
+    parentAdded: false,
+    stageIdx: -1,
+    stageProgress: 0,
+    failed: false,
+    page: 0,
+    toast: '',
+    adminTab: 'overview',
+    gdpr: false,
+    faqQuery: '',
+    faqOpen: {},
+    user: null,
+    loginTab: 'password',
+    loginEmail: '',
+    magicSent: false,
+    acctTab: 'orders',
+    photoDel: {},
+  };
+
+  ACCT_ORDERS = [
+    { id: 'IMA-2025-00812', date: '2025-11-28', total: 39.8, status: 'delivered', tracking: 'FR8829104412', photo: 'deleted', slug: 'forest', title: { en: 'The Enchanted Forest', fr: 'La Forêt Enchantée' }, chars: 'Emma & Papa' },
+    { id: 'IMA-2025-00839', date: '2025-12-14', total: 34.9, status: 'dispatched', tracking: 'FR8831077245', photo: 'scheduled', slug: 'space', title: { en: 'Captain of the Stars', fr: 'Capitaine des Étoiles' }, chars: 'Emma' },
+    { id: 'IMA-2025-00847', date: '2025-12-19', total: 74.7, status: 'processing', tracking: null, photo: 'active', slug: 'ocean', title: { en: 'The Underwater Kingdom', fr: 'Le Royaume Sous-Marin' }, chars: 'Emma & Mamie' },
+  ];
+
+  RIGHTS = [
+    { name: { en: 'Right to access', fr: "Droit d'accès" }, body: { en: 'Request a copy of all personal data we hold about you, from your account or by email.', fr: 'Demandez une copie de toutes vos données personnelles, depuis votre compte ou par e-mail.' } },
+    { name: { en: 'Right to rectification', fr: 'Droit de rectification' }, body: { en: 'Correct any inaccurate data (name, email, address) directly in your account settings.', fr: 'Corrigez toute donnée inexacte (nom, e-mail, adresse) dans les paramètres de votre compte.' } },
+    { name: { en: 'Right to erasure', fr: "Droit à l'effacement" }, body: { en: 'Delete your photos immediately, or your account and all data. Deletion completes within 72 hours.', fr: 'Supprimez vos photos immédiatement, ou votre compte et toutes vos données. Effectif sous 72 heures.' } },
+    { name: { en: 'Right to portability', fr: 'Droit à la portabilité' }, body: { en: 'Export all your data in a machine-readable format from the "My data" page.', fr: 'Exportez toutes vos données dans un format lisible depuis la page « Mes données ».' } },
+  ];
+
+  RETENTION = [
+    { type: { en: 'Raw photo uploads', fr: 'Photos brutes' }, period: { en: '24h after session expiry', fr: '24h après la session' }, method: { en: 'Automatic', fr: 'Automatique' } },
+    { type: { en: 'Processed images', fr: 'Images traitées' }, period: { en: '30 days after delivery', fr: '30 jours après livraison' }, method: { en: 'Automatic', fr: 'Automatique' } },
+    { type: { en: 'Order records', fr: 'Historique de commandes' }, period: { en: '3 years (legal)', fr: '3 ans (légal)' }, method: { en: 'Manual on request', fr: 'Manuel sur demande' } },
+    { type: { en: 'Account data', fr: 'Données de compte' }, period: { en: 'Until account deleted', fr: "Jusqu'à suppression" }, method: { en: 'User-triggered', fr: "Par l'utilisateur" } },
+  ];
+
+  img(slug, w, h) { return `url('https://picsum.photos/seed/imagitale-${slug}/${w}/${h}') center/cover no-repeat`; }
+
+  books = [
+    { slug: 'forest', title: { en: 'The Enchanted Forest', fr: 'La Forêt Enchantée' },
+      desc: { en: 'A magical adventure through a mysterious forest where every path leads somewhere wondrous.', fr: 'Une aventure magique à travers une forêt mystérieuse où chaque chemin mène vers l’émerveillement.' },
+      age: '3–7', pages: { en: '14 pages', fr: '14 pages' }, price: '€34.90', priceNum: 34.9,
+      chars: { en: 'Emma & Papa', fr: 'Emma & Papa' },
+      tags: { en: ['Adventure', 'Nature'], fr: ['Aventure', 'Nature'] },
+      scenes: [
+        { slug: 'forest-a', title: { en: 'The Journey Begins', fr: 'Le Début du Voyage' }, caption: { en: 'And so their story began…', fr: 'Et leur histoire commença…' } },
+        { slug: 'forest-b', title: { en: 'Meeting the Fox', fr: 'La Rencontre du Renard' }, caption: { en: 'A gentle friend appeared.', fr: 'Un ami bienveillant apparut.' } },
+        { slug: 'forest-c', title: { en: 'The Hidden Door', fr: 'La Porte Cachée' }, caption: { en: 'What could be inside?', fr: 'Que pouvait-il y avoir dedans ?' } },
+        { slug: 'forest-d', title: { en: 'The Crystal Lake', fr: 'Le Lac de Cristal' }, caption: { en: 'The water shimmered like glass.', fr: "L'eau scintillait comme du verre." } },
+        { slug: 'forest-e', title: { en: 'Home Again', fr: 'De Retour à la Maison' }, caption: { en: 'Safe and sound, at last.', fr: 'Sain et sauf, enfin.' } },
+      ] },
+    { slug: 'space', title: { en: 'Captain of the Stars', fr: 'Capitaine des Étoiles' },
+      desc: { en: 'An interstellar voyage with your child as the hero, exploring galaxies far beyond the clouds.', fr: 'Un voyage interstellaire avec ton enfant comme héros, à la découverte de galaxies au-delà des nuages.' },
+      age: '4–8', pages: { en: '16 pages', fr: '16 pages' }, price: '€34.90', priceNum: 34.9,
+      chars: { en: 'Emma', fr: 'Emma' },
+      tags: { en: ['Space', 'Science'], fr: ['Espace', 'Science'] },
+      scenes: [
+        { slug: 'space-a', title: { en: 'Launch Day', fr: 'Jour du Décollage' }, caption: { en: 'Three… two… one…', fr: 'Trois… deux… un…' } },
+        { slug: 'space-b', title: { en: 'Meeting the Aliens', fr: 'La Rencontre des Aliens' }, caption: { en: 'New friends among the stars.', fr: 'De nouveaux amis parmi les étoiles.' } },
+        { slug: 'space-c', title: { en: 'The Asteroid Field', fr: "Le Champ d'Astéroïdes" }, caption: { en: 'Hold on tight!', fr: 'Accroche-toi bien !' } },
+        { slug: 'space-d', title: { en: 'Planet Discovery', fr: "Découverte d'une Planète" }, caption: { en: 'A whole new world.', fr: 'Un monde entièrement nouveau.' } },
+        { slug: 'space-e', title: { en: 'Triumphant Return', fr: 'Retour Triomphal' }, caption: { en: 'A hero comes home.', fr: 'Un héros rentre chez lui.' } },
+      ] },
+    { slug: 'ocean', title: { en: 'The Underwater Kingdom', fr: 'Le Royaume Sous-Marin' },
+      desc: { en: 'Dive into an underwater kingdom filled with magical creatures and glittering secrets.', fr: 'Plonge dans un royaume sous-marin peuplé de créatures magiques et de secrets scintillants.' },
+      age: '3–6', pages: { en: '12 pages', fr: '12 pages' }, price: '€34.90', priceNum: 34.9,
+      chars: { en: 'Emma & Mamie', fr: 'Emma & Mamie' },
+      tags: { en: ['Ocean', 'Magic'], fr: ['Océan', 'Magie'] },
+      scenes: [
+        { slug: 'ocean-a', title: { en: 'The Dive', fr: 'Le Plongeon' }, caption: { en: 'Down into the blue.', fr: 'Plongée dans le bleu.' } },
+        { slug: 'ocean-b', title: { en: 'Friendly Dolphins', fr: 'Les Dauphins Amicaux' }, caption: { en: 'Playmates of the sea.', fr: 'Compagnons de jeu de la mer.' } },
+        { slug: 'ocean-c', title: { en: 'The Sunken Castle', fr: 'Le Château Englouti' }, caption: { en: 'Secrets beneath the waves.', fr: 'Des secrets sous les vagues.' } },
+        { slug: 'ocean-d', title: { en: 'The Pearl', fr: 'La Perle' }, caption: { en: 'A treasure to treasure.', fr: 'Un trésor à chérir.' } },
+      ] },
+  ];
+
+  PIPE = [
+    { label: { en: 'Uploading photos', fr: 'Téléchargement des photos' }, duration: 1400 },
+    { label: { en: 'Validating faces', fr: 'Validation des visages' }, duration: 1600 },
+    { label: { en: 'Generating your characters', fr: 'Création des personnages' }, duration: 2600 },
+    { label: { en: 'Personalising scenes', fr: 'Personnalisation des scènes' }, duration: 2400 },
+    { label: { en: 'Enhancing faces', fr: 'Amélioration des visages' }, duration: 2000 },
+    { label: { en: 'Assembling your book', fr: 'Assemblage du livre' }, duration: 1600 },
+    { label: { en: 'Preparing your preview', fr: "Préparation de l'aperçu" }, duration: 1400 },
+  ];
+
+  FAQ = [
+    { q: { en: 'What happens to my photos after the book is made?', fr: 'Que deviennent mes photos après la création du livre ?' },
+      a: { en: 'Raw uploads are automatically deleted 24 hours after your session expires. Processed images are deleted 30 days after delivery. You can also delete everything immediately from your account.', fr: "Les photos brutes sont supprimées 24 heures après l'expiration de votre session. Les images traitées sont supprimées 30 jours après la livraison. Vous pouvez aussi tout supprimer immédiatement depuis votre compte." } },
+    { q: { en: 'How does the personalisation work?', fr: 'Comment fonctionne la personnalisation ?' },
+      a: { en: 'You upload 1–2 photos of your child. Our AI pipeline places their likeness into every illustrated scene. The more photos you upload, the better the result.', fr: "Vous téléchargez 1 à 2 photos de votre enfant. Notre pipeline d'IA intègre son visage dans chaque scène illustrée. Plus vous fournissez de photos, meilleur est le résultat." } },
+    { q: { en: 'What kind of photo works best?', fr: 'Quel type de photo fonctionne le mieux ?' },
+      a: { en: 'A clear, front-facing photo in good lighting works best. Avoid sunglasses, heavy shadows, or blurry images. A second photo from a different angle improves accuracy.', fr: 'Une photo nette, de face, avec un bon éclairage. Évitez les lunettes de soleil, les ombres marquées et les images floues. Une seconde photo sous un autre angle améliore la précision.' } },
+    { q: { en: 'How long does delivery take?', fr: 'Quel est le délai de livraison ?' },
+      a: { en: 'Books are printed and dispatched within 2–3 business days. Delivery within France takes 3–5 additional days — about 5–7 business days in total.', fr: 'Les livres sont imprimés et expédiés sous 2 à 3 jours ouvrés. La livraison en France prend 3 à 5 jours supplémentaires — environ 5 à 7 jours ouvrés au total.' } },
+    { q: { en: 'When am I charged?', fr: 'Quand suis-je débité ?' },
+      a: { en: 'You are charged only after approving the full preview of your book. You never pay before seeing the result.', fr: "Vous n'êtes débité qu'après avoir validé l'aperçu complet de votre livre. Vous ne payez jamais avant d'avoir vu le résultat." } },
+    { q: { en: 'What are my rights under GDPR?', fr: 'Quels sont mes droits au titre du RGPD ?' },
+      a: { en: 'As an EU resident you can access, correct, export, and delete your personal data at any time — directly from your account or by emailing us.', fr: "En tant que résident de l'UE, vous pouvez accéder, corriger, exporter et supprimer vos données personnelles à tout moment — depuis votre compte ou par e-mail." } },
+  ];
+
+  FILTERS = {
+    en: ['All stories', 'Ages 3–5', 'Ages 6–8', 'Adventure', 'Family'],
+    fr: ['Toutes', '3–5 ans', '6–8 ans', 'Aventure', 'Famille'],
+  };
+
+  JOBS = [
+    { id: 'job-4484', session: 'ses-9932', stage: 'gemini', status: 'active', started: '14:35', duration: '42s' },
+    { id: 'job-4483', session: 'ses-9928', stage: 'faceswap', status: 'active', started: '14:34', duration: '1m 12s' },
+    { id: 'job-4482', session: 'ses-9921', stage: 'preview', status: 'completed', started: '14:29', duration: '2m 04s' },
+    { id: 'job-4481', session: 'ses-9917', stage: 'upload', status: 'waiting', started: '—', duration: '—' },
+    { id: 'job-4480', session: 'ses-9910', stage: 'composite', status: 'completed', started: '14:12', duration: '1m 58s' },
+    { id: 'job-4479', session: 'ses-9902', stage: 'faceswap', status: 'failed', started: '13:52', duration: '38s' },
+  ];
+
+  ORDERS = [
+    { id: 'IMA-2025-00851', customer: 'Camille Durand', books: 2, total: '€74.70', status: 'processing', created: '2025-12-19' },
+    { id: 'IMA-2025-00850', customer: 'Thomas Bernard', books: 1, total: '€39.80', status: 'dispatched', created: '2025-12-19' },
+    { id: 'IMA-2025-00849', customer: 'Inès Martin', books: 1, total: '€39.80', status: 'printing', created: '2025-12-18' },
+    { id: 'IMA-2025-00848', customer: 'Lucas Petit', books: 3, total: '€109.60', status: 'processing', created: '2025-12-18' },
+    { id: 'IMA-2025-00847', customer: 'Sophie Roux', books: 2, total: '€74.70', status: 'delivered', created: '2025-12-17' },
+  ];
+
+  CHART = [['Wed', 14], ['Thu', 19], ['Fri', 26], ['Sat', 31], ['Sun', 22], ['Mon', 17], ['Tue', 23]];
+
+  ACTIVITY = [
+    { time: '14:32', text: 'Job job-4482 completed (session ses-9921)' },
+    { time: '14:28', text: 'Order IMA-2025-00851 placed — 2 books, €74.70' },
+    { time: '14:11', text: 'Photo deletion executed for session ses-9874' },
+    { time: '13:56', text: 'Job job-4479 failed at stage faceswap' },
+    { time: '13:40', text: 'Order IMA-2025-00850 dispatched — FR8831099120' },
+  ];
+
+  STORAGE = [
+    { label: 'Raw uploads', pct: 75, total: '128 GB' },
+    { label: 'Processed images', pct: 37, total: '164 GB' },
+    { label: 'Previews', pct: 65, total: '52 GB' },
+    { label: 'Print PDFs', pct: 71, total: '68 GB' },
+  ];
+
+  T = {
+    en: {
+      tagline: "Your child's story", navStories: 'Stories', navHow: 'How it works', navFaq: 'FAQ', navSignin: 'Sign in', navCta: 'Start your book →',
+      heroEyebrow: 'Personalised from your photo', heroT1: 'Their face.', heroT2: 'Their story.', heroT3: 'Forever.',
+      heroSub: 'Upload a photo, pick a story, and receive a beautifully illustrated book where your child is the hero of every page.',
+      heroCta1: 'Browse the stories', heroCta2: 'See how it works ↓', trust1: '4.9/5 rating', trust2: 'GDPR-native', trust3: 'France delivery',
+      heroBadge: 'Your child as the hero',
+      howTitle: 'How it works', step1t: 'Pick a story', step1d: 'Choose from our illustrated adventures.',
+      step2t: 'Upload a photo', step2d: 'One clear, front-facing photo is all it takes.',
+      step3t: 'We personalise it', step3d: 'Your child appears in every scene.',
+      step4t: 'It arrives home', step4d: 'Printed, bound, and delivered in days.',
+      catTitle: 'Made to be treasured', seeAll: 'See all stories →',
+      testTitle: 'Loved by families across France',
+      gdprTitle: 'Your family, your data — protected by design',
+      gdpr1t: 'Photos auto-deleted', gdpr1d: 'Raw uploads are removed 24h after your session.',
+      gdpr2t: 'Never shared', gdpr2d: 'Used only to make your book — never for training.',
+      gdpr3t: 'Full control', gdpr3d: 'Access, export, or delete your data anytime.',
+      storiesTitle: 'Choose your story', storiesSub: 'Every book is illustrated by hand and personalised for your child.',
+      personalise: 'Personalise this book →', viewDetails: 'View details',
+      allStories: 'All stories', ageYears: 'years', perBook: 'per personalised book',
+      whatInside: "A peek inside", similar: 'You may also love', seePreview: 'See a preview',
+      changeStory: 'Change story', custStep1: 'Characters', custStep2: 'Photos', custStep3: 'Preview',
+      roleChild: 'Main character · Child', childNameLabel: "Child's first name", namePlaceholder: 'e.g. Emma',
+      uploadTitle: 'Add 1–2 photos of your child', dropPhoto: 'Drop photo here', slot1sub: 'Front-facing · Required', slot2sub: 'Different angle · Improves result',
+      addParent: '＋ Add a parent to the story', createBook: 'Create my book →', previewLabel: 'Your book preview', previewStarring: 'Starring',
+      procSub: 'This takes about 60–90 seconds. Please keep this page open.',
+      procPrivacy: 'Your photos are processed securely and never shared.', retry: 'Retry', simFail: 'Simulate a failure', seeBook: 'See your book →',
+      back: 'Back to setup', addCart: 'Add to cart · €34.90', addedToast: 'Added to your cart',
+      cartTitle: 'Your cart', cartEmpty: 'Your cart is empty for now.', cartBrowse: 'Browse the stories',
+      summary: 'Order summary', subtotal: 'Subtotal', shipping: 'Shipping', total: 'Total', checkoutBtn: 'Proceed to checkout', remove: 'Remove', securePay: 'Secure payment via Stripe',
+      backCart: 'Back to cart', checkoutTitle: 'Checkout', secDelivery: 'Delivery address', secPayment: 'Payment', viaStripe: 'Secured by Stripe',
+      firstName: 'First name', lastName: 'Last name', address: 'Address', postcode: 'Postcode', city: 'City',
+      cardNumber: 'Card number', qtyShort: 'Qty', gdprConsent: 'I agree that my photos will be used only to create my book and deleted afterwards, per the privacy policy.',
+      payNow: 'Pay', orderPlaced: 'Order confirmed — merci!',
+      faqTitle: 'Questions & answers', faqSub: 'Everything about photos, personalisation, delivery and your data.', faqSearch: 'Search questions…', faqNone: 'No questions match your search.',
+      ordersPerDay: 'Orders per day', recentActivity: 'Recent activity', used: 'used', exitAdmin: 'Exit to site',
+      adminOverview: 'Overview', adminJobs: 'Job queue', adminOrders: 'Orders', adminStorage: 'Storage',
+      footerTag: 'Personalised storybooks where your child is the hero. Made in France, printed with care.',
+      footerExplore: 'Explore', footerCompany: 'Company', footerAdmin: 'Admin dashboard', footerPrivacy: 'Privacy & GDPR', footerContact: 'Contact', footerRights: '© 2025 Imagitale SAS. All rights reserved.',
+    },
+    fr: {
+      tagline: "L'histoire de votre enfant", navStories: 'Histoires', navHow: 'Comment ça marche', navFaq: 'FAQ', navSignin: 'Se connecter', navCta: 'Commencer →',
+      heroEyebrow: 'Personnalisé à partir de votre photo', heroT1: 'Son visage.', heroT2: 'Son histoire.', heroT3: 'Pour toujours.',
+      heroSub: 'Envoyez une photo, choisissez une histoire, et recevez un livre magnifiquement illustré où votre enfant est le héros de chaque page.',
+      heroCta1: 'Voir les histoires', heroCta2: 'Comment ça marche ↓', trust1: 'Note 4,9/5', trust2: 'RGPD natif', trust3: 'Livraison en France',
+      heroBadge: 'Votre enfant en héros',
+      howTitle: 'Comment ça marche', step1t: 'Choisissez une histoire', step1d: 'Parmi nos aventures illustrées.',
+      step2t: 'Envoyez une photo', step2d: 'Une photo nette et de face suffit.',
+      step3t: 'On personnalise', step3d: 'Votre enfant apparaît dans chaque scène.',
+      step4t: 'Livré chez vous', step4d: 'Imprimé, relié et livré en quelques jours.',
+      catTitle: 'Fait pour être chéri', seeAll: 'Toutes les histoires →',
+      testTitle: 'Adoré par les familles en France',
+      gdprTitle: 'Votre famille, vos données — protégées par conception',
+      gdpr1t: 'Photos supprimées', gdpr1d: 'Les photos brutes sont supprimées 24h après la session.',
+      gdpr2t: 'Jamais partagées', gdpr2d: "Utilisées uniquement pour votre livre — jamais pour l'entraînement.",
+      gdpr3t: 'Contrôle total', gdpr3d: 'Accédez, exportez ou supprimez vos données à tout moment.',
+      storiesTitle: 'Choisissez votre histoire', storiesSub: 'Chaque livre est illustré à la main et personnalisé pour votre enfant.',
+      personalise: 'Personnaliser ce livre →', viewDetails: 'Voir les détails',
+      allStories: 'Toutes les histoires', ageYears: 'ans', perBook: 'par livre personnalisé',
+      whatInside: "Un aperçu de l'intérieur", similar: 'Vous aimerez aussi', seePreview: 'Voir un aperçu',
+      changeStory: "Changer d'histoire", custStep1: 'Personnages', custStep2: 'Photos', custStep3: 'Aperçu',
+      roleChild: 'Personnage principal · Enfant', childNameLabel: "Prénom de l'enfant", namePlaceholder: 'ex. Emma',
+      uploadTitle: '1 à 2 photos de votre enfant', dropPhoto: 'Déposez la photo ici', slot1sub: 'De face · Requis', slot2sub: 'Autre angle · Améliore le résultat',
+      addParent: "＋ Ajouter un parent à l'histoire", createBook: 'Créer mon livre →', previewLabel: 'Aperçu de votre livre', previewStarring: 'Avec',
+      procSub: 'Cela prend environ 60 à 90 secondes. Gardez cette page ouverte.',
+      procPrivacy: 'Vos photos sont traitées en toute sécurité et jamais partagées.', retry: 'Réessayer', simFail: 'Simuler une erreur', seeBook: 'Voir votre livre →',
+      back: 'Retour', addCart: 'Ajouter au panier · 34,90 €', addedToast: 'Ajouté à votre panier',
+      cartTitle: 'Votre panier', cartEmpty: 'Votre panier est vide pour le moment.', cartBrowse: 'Voir les histoires',
+      summary: 'Récapitulatif', subtotal: 'Sous-total', shipping: 'Livraison', total: 'Total', checkoutBtn: 'Passer au paiement', remove: 'Retirer', securePay: 'Paiement sécurisé via Stripe',
+      backCart: 'Retour au panier', checkoutTitle: 'Paiement', secDelivery: 'Adresse de livraison', secPayment: 'Paiement', viaStripe: 'Sécurisé par Stripe',
+      firstName: 'Prénom', lastName: 'Nom', address: 'Adresse', postcode: 'Code postal', city: 'Ville',
+      cardNumber: 'Numéro de carte', qtyShort: 'Qté', gdprConsent: "J'accepte que mes photos servent uniquement à créer mon livre et soient supprimées ensuite, selon la politique de confidentialité.",
+      payNow: 'Payer', orderPlaced: 'Commande confirmée — merci !',
+      faqTitle: 'Questions & réponses', faqSub: 'Tout sur les photos, la personnalisation, la livraison et vos données.', faqSearch: 'Rechercher une question…', faqNone: 'Aucune question ne correspond.',
+      ordersPerDay: 'Commandes par jour', recentActivity: 'Activité récente', used: 'utilisé', exitAdmin: 'Retour au site',
+      adminOverview: "Vue d'ensemble", adminJobs: 'File de traitement', adminOrders: 'Commandes', adminStorage: 'Stockage',
+      footerTag: 'Des livres personnalisés où votre enfant est le héros. Conçus en France, imprimés avec soin.',
+      footerExplore: 'Explorer', footerCompany: 'Entreprise', footerAdmin: 'Tableau de bord admin', footerPrivacy: 'Confidentialité & RGPD', footerContact: 'Contact', footerRights: '© 2025 Imagitale SAS. Tous droits réservés.',
+    },
+  };
+
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  go(screen) { clearInterval(this.timer); this.setState({ screen }); window.scrollTo(0, 0); }
+
+  runPipeline() {
+    clearInterval(this.timer);
+    this.setState({ stageIdx: 0, stageProgress: 0, failed: false });
+    let i = 0;
+    const next = () => {
+      if (i >= this.PIPE.length) { this.setState({ stageIdx: this.PIPE.length }); return; }
+      this.setState({ stageIdx: i, stageProgress: 0 });
+      const dur = this.PIPE[i].duration, start = Date.now();
+      this.timer = setInterval(() => {
+        if (this.state.failed) { clearInterval(this.timer); return; }
+        const p = Math.min(1, (Date.now() - start) / dur);
+        this.setState({ stageProgress: p });
+        if (p >= 1) { clearInterval(this.timer); i++; next(); }
+      }, 60);
+    };
+    next();
+  }
+
+  showToast(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._toast);
+    this._toast = setTimeout(() => this.setState({ toast: '' }), 2600);
+  }
+
+  seg(active) {
+    const base = 'width:38px;height:28px;border:none;border-radius:9999px;font-family:DM Sans;font-size:13px;cursor:pointer;transition:all .15s ease;';
+    return active
+      ? base + 'background:#3D2B1F;color:#fff;font-weight:600;box-shadow:0 1px 4px rgba(26,23,20,.06);'
+      : base + 'background:transparent;color:#8A7F78;font-weight:500;';
+  }
+
+  addBook(idx) {
+    const items = this.state.cartItems.map((x) => ({ ...x }));
+    const ex = items.find((x) => x.idx === idx);
+    if (ex) ex.qty += 1; else items.push({ idx, qty: 1 });
+    this.setState({ cartItems: items });
+  }
+
+  fmt(n) { return this.state.lang === 'fr' ? n.toFixed(2).replace('.', ',') + ' €' : '€' + n.toFixed(2); }
+
+  renderVals() {
+    const st = this.state;
+    const { screen, lang, selBook, childName, slots, parentAdded, stageIdx, stageProgress, failed, page, toast } = st;
+    const s = this.T[lang];
+    const cur = this.books[selBook];
+    const cartCount = st.cartItems.reduce((a, b) => a + b.qty, 0);
+
+    const mkBook = (b, i) => ({
+      slug: b.slug, title: b.title[lang], desc: b.desc[lang], age: b.age, pages: b.pages[lang],
+      price: b.price, cover: this.img(b.slug, 600, 800), tag1: b.tags[lang][0], tag2: b.tags[lang][1],
+      select: () => { this.setState({ selBook: i, childName: '', slots: ['empty', 'empty'], parentAdded: false }); this.go('customize'); },
+      detail: () => { this.setState({ selBook: i }); this.go('detail'); },
+    });
+    const localBooks = this.books.map(mkBook);
+
+    const testimonials = [
+      { name: 'Camille D.', city: 'Lyon', quote: lang === 'fr' ? 'Ma fille se reconnaît sur chaque page. Elle demande son livre tous les soirs !' : 'My daughter recognises herself on every page. She asks for her book every night!' },
+      { name: 'Thomas B.', city: 'Bordeaux', quote: lang === 'fr' ? "La qualité d'impression est superbe. Le cadeau parfait." : 'The print quality is superb. The perfect gift.' },
+      { name: 'Inès M.', city: 'Paris', quote: lang === 'fr' ? 'Livré en 5 jours, photos supprimées automatiquement.' : 'Delivered in 5 days, and the photos deleted automatically.' },
+    ];
+
+    const filters = this.FILTERS[lang].map((label, i) => {
+      const active = st.filter === i;
+      const style = 'padding:9px 18px;border-radius:9999px;font-size:14px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .2s ease;'
+        + (active ? 'background:#3D2B1F;color:#fff;border:1px solid #3D2B1F;' : 'background:#fff;color:#8A7F78;border:1px solid #E2DDD6;');
+      return { label, style, pick: () => this.setState({ filter: i }) };
+    });
+
+    const filled = slots.filter((x) => x === 'full').length;
+    const counterText = `${filled} / 2 photos${filled === 2 ? ' ✓' : ''}`;
+    const counterColor = filled === 2 ? '#4A7C59' : '#8A7F78';
+    const slotStyle = (full) => 'position:relative;min-height:140px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;padding:12px;overflow:hidden;transition:all .2s ease;'
+      + (full ? `border:1.5px solid #4A7C59;background:${this.img('child-portrait', 300, 300)};` : 'border:1.5px solid #E2DDD6;background:#FDF9F4;');
+
+    const parentCardStyle = 'display:flex;align-items:center;gap:10px;justify-content:center;padding:18px;border-radius:20px;cursor:pointer;transition:all .2s ease;'
+      + (parentAdded ? 'border:1.5px solid #4A7C59;background:#F0F6F2;' : 'border:1.5px dashed #E2DDD6;background:transparent;');
+
+    const stages = this.PIPE.map((p, i) => {
+      let stt = i < stageIdx ? 'done' : (i === stageIdx ? 'active' : 'pending');
+      if (failed && i === stageIdx) stt = 'failed';
+      const active = stt === 'active', done = stt === 'done', pending = stt === 'pending', fail = stt === 'failed';
+      const rowStyle = active ? 'background:#FDF5EC;border:1px solid #E8C5A0;'
+        : fail ? 'background:#FEF5F5;border:1px solid #C0392B;'
+        : 'background:transparent;border:1px solid transparent;';
+      const labelStyle = active ? 'font-weight:600;color:#3D2B1F;'
+        : done ? 'color:#8A7F78;opacity:.7;'
+        : fail ? 'color:#C0392B;font-weight:600;'
+        : 'color:#8A7F78;';
+      return { label: p.label[lang], active, done, pending, failed: fail, rowStyle, labelStyle, pct: Math.round(stageProgress * 100) + '%' };
+    });
+
+    const name = childName.trim() || 'Emma';
+    const procHeading = lang === 'fr' ? `Création de l'histoire de ${name}…` : `Creating ${name}'s story…`;
+
+    const scenes = cur.scenes.map((sc, i) => ({
+      slug: sc.slug, cover: this.img(sc.slug, 800, 600), title: sc.title[lang], caption: sc.caption[lang],
+      thumbStyle: i === page ? 'outline:2px solid #E8C5A0;outline-offset:1px;opacity:1;' : 'opacity:.5;',
+      go: () => this.setState({ page: i }),
+      openPreview: () => { this.setState({ page: i }); this.go('preview'); },
+    }));
+    const curScene = scenes[page] || scenes[0];
+    const pageCounter = lang === 'fr' ? `Page ${page + 1} sur ${cur.scenes.length}` : `Page ${page + 1} of ${cur.scenes.length}`;
+
+    // Cart
+    const cartItems = st.cartItems.map((ci) => {
+      const b = this.books[ci.idx];
+      return {
+        idx: ci.idx, qty: ci.qty, title: b.title[lang], characters: b.chars[lang], version: 'v1.2',
+        price: this.fmt(b.priceNum), lineTotal: this.fmt(b.priceNum * ci.qty), cover: this.img(b.slug, 200, 260),
+        inc: () => this.addBook(ci.idx),
+        dec: () => { const items = st.cartItems.map((x) => ({ ...x })); const e = items.find((x) => x.idx === ci.idx); if (e) { e.qty -= 1; } this.setState({ cartItems: items.filter((x) => x.qty > 0) }); },
+        remove: () => this.setState({ cartItems: st.cartItems.filter((x) => x.idx !== ci.idx) }),
+      };
+    });
+    const subtotalNum = st.cartItems.reduce((a, c) => a + this.books[c.idx].priceNum * c.qty, 0);
+    const shipNum = cartCount > 0 ? 4.9 : 0;
+
+    // Admin
+    const adminNav = [
+      { key: 'overview', label: s.adminOverview }, { key: 'jobs', label: s.adminJobs },
+      { key: 'orders', label: s.adminOrders }, { key: 'storage', label: s.adminStorage },
+    ].map((n) => ({
+      label: n.label,
+      style: st.adminTab === n.key ? 'background:rgba(255,255,255,.12);color:#fff;' : 'background:transparent;color:rgba(255,255,255,.7);',
+      go: () => this.setState({ adminTab: n.key }),
+    }));
+    const adminHead = { overview: s.adminOverview, jobs: s.adminJobs, orders: s.adminOrders, storage: s.adminStorage }[st.adminTab];
+    const adminSubMap = {
+      overview: lang === 'fr' ? "État en temps réel de la plateforme." : 'Real-time snapshot of the platform.',
+      jobs: lang === 'fr' ? 'Pipeline de génération en direct.' : 'Live generation pipeline.',
+      orders: lang === 'fr' ? 'Commandes récentes et leur statut.' : 'Recent orders and their status.',
+      storage: lang === 'fr' ? 'Utilisation du stockage par catégorie.' : 'Storage usage by category.',
+    };
+    const adminStats = [
+      { label: lang === 'fr' ? 'Jobs actifs' : 'Active jobs', value: '7', color: '#3D2B1F' },
+      { label: lang === 'fr' ? "Commandes aujourd'hui" : 'Orders today', value: '23', color: '#4A7C59' },
+      { label: lang === 'fr' ? 'Stockage utilisé' : 'Storage used', value: '412 GB', color: '#3D2B1F' },
+      { label: lang === 'fr' ? 'Jobs échoués' : 'Failed jobs', value: '2', color: '#C0392B' },
+    ];
+    const maxCount = Math.max(...this.CHART.map((c) => c[1]));
+    const adminChart = this.CHART.map(([day, n]) => ({ day, h: Math.round((n / maxCount) * 130) + 'px' }));
+    const badgeFor = (status) => {
+      const m = {
+        active: 'background:#E0EEF4;color:#2A6070;', processing: 'background:#F5E8D8;color:#8B5E3C;',
+        completed: 'background:#E0EDE4;color:#2D5E3A;', delivered: 'background:#E0EDE4;color:#2D5E3A;',
+        dispatched: 'background:#E0EEF4;color:#2A6070;', printing: 'background:#F5E8D8;color:#8B5E3C;',
+        waiting: 'background:#EFEAE3;color:#8A7F78;', failed: 'background:#FDECEA;color:#C0392B;',
+      };
+      return m[status] || 'background:#EFEAE3;color:#8A7F78;';
+    };
+    const jobRows = this.JOBS.map((j, i) => ({ ...j, badge: badgeFor(j.status), rowBg: i % 2 ? 'background:#F9F7F5;' : 'background:#fff;' }));
+    const orderRows = this.ORDERS.map((o, i) => ({ ...o, badge: badgeFor(o.status), rowBg: i % 2 ? 'background:#F9F7F5;' : 'background:#fff;' }));
+    const storageCats = this.STORAGE.map((c) => ({ label: c.label, total: c.total, pct: c.pct + '%' }));
+
+    // FAQ
+    const query = st.faqQuery.trim().toLowerCase();
+    const faqItems = this.FAQ.map((f, i) => ({ q: f.q[lang], a: f.a[lang], i }))
+      .filter((f) => !query || f.q.toLowerCase().includes(query) || f.a.toLowerCase().includes(query))
+      .map((f) => ({
+        question: f.q, answer: f.a, open: !!st.faqOpen[f.i],
+        iconStyle: st.faqOpen[f.i] ? 'transform:rotate(45deg);' : '',
+        toggle: () => this.setState({ faqOpen: { ...st.faqOpen, [f.i]: !st.faqOpen[f.i] } }),
+      }));
+
+    const inputStyle = 'height:48px;border:1.5px solid #E2DDD6;border-radius:12px;padding:0 15px;font-size:15px;color:#1A1714;outline:none;width:100%;background:#fff;';
+
+    // Auth / Account / Privacy / Contact
+    const L = (fr, en) => (lang === 'fr' ? fr : en);
+    const authTab = (a) => 'flex:1;padding:9px;border:none;border-radius:9999px;font-family:DM Sans;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s ease;' + (a ? 'background:#3D2B1F;color:#fff;' : 'background:transparent;color:#8A7F78;');
+    const acctTabStyle = (a) => 'display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:none;border-radius:12px;font-family:DM Sans;font-size:14px;font-weight:500;cursor:pointer;text-align:left;transition:all .15s ease;' + (a ? 'background:#3D2B1F;color:#fff;' : 'background:transparent;color:#8A7F78;');
+    const statusLbl = (x) => ({ processing: L('En production', 'In production'), printing: L('Impression', 'Printing'), dispatched: L('Expédié', 'Dispatched'), delivered: L('Livré', 'Delivered') }[x] || x);
+    const photoLbl = (p) => ({ active: L('Photos actives', 'Photos active'), scheduled: L('Suppression prévue', 'Deletion scheduled'), deleted: L('Photos supprimées', 'Photos deleted') }[p]);
+    const photoBadge = (p) => ({ active: 'background:#E0EDE4;color:#2D5E3A;', scheduled: 'background:#F5E8D8;color:#8B5E3C;', deleted: 'background:#EFEAE3;color:#8A7F78;' }[p]);
+
+    const u = st.user;
+    const userInitials = u ? u.name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase() : '';
+
+    const acctOrders = this.ACCT_ORDERS.map((o) => {
+      const pstate = st.photoDel[o.id] ? 'deleted' : o.photo;
+      return {
+        id: o.id, date: o.date, total: this.fmt(o.total), tracking: o.tracking, hasTracking: !!o.tracking,
+        status: statusLbl(o.status), statusBadge: badgeFor(o.status),
+        cover: this.img(o.slug, 160, 210), bookTitle: o.title[lang], chars: o.chars,
+        photoLabel: photoLbl(pstate), photoBadge: photoBadge(pstate), canDelete: pstate !== 'deleted',
+        del: () => this.setState({ photoDel: { ...st.photoDel, [o.id]: true } }),
+      };
+    });
+
+    const au = {
+      welcome: L('Bon retour', 'Welcome back'), sub: L('Connectez-vous pour gérer vos livres et vos données.', 'Sign in to manage your books and your data.'),
+      magicTab: L('Lien magique', 'Magic link'), passwordTab: L('Mot de passe', 'Password'),
+      email: L('Adresse e-mail', 'Email address'), password: L('Mot de passe', 'Password'),
+      sendLink: L('Envoyer le lien', 'Send sign-in link'), signIn: L('Se connecter', 'Sign in'), forgot: L('Mot de passe oublié ?', 'Forgot password?'),
+      checkInbox: L('Vérifiez votre boîte mail', 'Check your inbox'),
+      sentBody: L('Nous avons envoyé un lien de connexion à votre adresse. Il expire dans 15 minutes.', 'We sent a sign-in link to your address. It expires in 15 minutes.'),
+      resend: L('Renvoyer le lien', 'Resend link'), newHere: L('Nouveau ici ?', 'New here?'), browse: L('Parcourir les histoires →', 'Browse the stories →'),
+      hint: L('Astuce : un e-mail contenant « admin » ouvre le tableau de bord.', 'Tip: an email containing "admin" opens the dashboard.'),
+      magicTabStyle: authTab(st.loginTab === 'magic'), passTabStyle: authTab(st.loginTab === 'password'), isMagic: st.loginTab === 'magic', showPass: st.loginTab === 'password',
+    };
+
+    const ac = {
+      title: L('Mon compte', 'My account'),
+      tabOrders: L('Commandes', 'Orders'), tabData: L('Mes données', 'My data'), tabSettings: L('Paramètres', 'Settings'),
+      ordersTitle: L('Vos commandes', 'Your orders'), tracking: L('Suivi', 'Tracking'), receipt: L('Reçu', 'Receipt'),
+      photosTitle: L('Vos photos', 'Your photos'), photosSub: L('Gérez les photos liées à chaque commande.', 'Manage the photos tied to each order.'),
+      exportTitle: L('Exporter mes données', 'Export my data'), exportDesc: L('Téléchargez toutes vos données dans un format lisible.', 'Download all your data in a readable format.'), exportBtn: L('Demander un export', 'Request export'),
+      dangerTitle: L('Zone sensible', 'Danger zone'), dangerDesc: L('Cette action est définitive et irréversible.', 'This action is permanent and irreversible.'), deleteAcct: L('Supprimer mon compte', 'Delete my account'), deleteNow: L('Supprimer maintenant', 'Delete now'),
+      setTitle: L('Paramètres du compte', 'Account settings'), setName: L('Nom', 'Name'), setEmail: L('E-mail', 'Email'), setLang: L('Langue', 'Language'), setNotif: L('Recevoir les e-mails de suivi de commande', 'Receive order tracking emails'), save: L('Enregistrer', 'Save changes'), logout: L('Se déconnecter', 'Sign out'), saved: L('✓ Modifications enregistrées', '✓ Changes saved'),
+    };
+
+    const pv = {
+      title: L('Confidentialité & RGPD', 'Privacy & GDPR'), updated: L('Dernière mise à jour : 19 décembre 2025', 'Last updated: 19 December 2025'),
+      intro: L('Imagitale est exploité par Imagitale SAS, basée en France. Nous ne collectons que ce qui est nécessaire pour créer votre livre — jamais pour la publicité, jamais vendu à des tiers.', 'Imagitale is operated by Imagitale SAS, based in France. We collect only what is needed to make your book — never for advertising, never sold to third parties.'),
+      collectT: L('Ce que nous collectons', 'What we collect'),
+      collect: [L('Compte : adresse e-mail, nom', 'Account: email address, name'), L('Commande : adresse de livraison, référence de paiement (aucun numéro de carte stocké)', 'Order: delivery address, payment reference (no card numbers stored)'), L('Photos : téléchargées uniquement pour la personnalisation', 'Photos: uploaded solely for personalisation'), L("Utilisation : pages visitées (anonymisées)", 'Usage: page visits (anonymised)')],
+      photoT: L('Traitement des photos', 'Photo handling'),
+      photoBox: [L('Photos brutes supprimées 24h après la session', 'Raw uploads deleted 24h after session expiry'), L('Fichiers traités supprimés 30 jours après livraison', 'Processed assets deleted 30 days after delivery'), L("Suppression par l'utilisateur : immédiate et irréversible", 'User-triggered deletion: immediate, irreversible'), L('Aucune photo utilisée pour entraîner des IA', 'No photos used for AI training'), L('Aucune photo partagée avec des tiers', 'No photos shared with any third party')],
+      rightsT: L('Vos droits au titre du RGPD', 'Your rights under GDPR'),
+      rights: this.RIGHTS.map((r) => ({ name: r.name[lang], body: r.body[lang] })),
+      retentionT: L('Durées de conservation', 'Data retention'),
+      colType: L('Type de données', 'Data type'), colPeriod: L('Durée', 'Retention'), colMethod: L('Suppression', 'Deletion'),
+      retention: this.RETENTION.map((r) => ({ type: r.type[lang], period: r.period[lang], method: r.method[lang] })),
+      contactT: L('Contact', 'Contact'), contactBody: L('Pour exercer vos droits, écrivez à privacy@imagitale.com — réponse sous 30 jours.', 'To exercise your rights, email privacy@imagitale.com — response within 30 days.'),
+    };
+
+    const ct = {
+      title: L('Contactez-nous', 'Get in touch'), sub: L('Une question sur une commande, une photo ou vos données ? Nous répondons sous 24h.', 'A question about an order, a photo, or your data? We reply within 24 hours.'),
+      name: L('Votre nom', 'Your name'), email: L('Votre e-mail', 'Your email'), subject: L('Sujet', 'Subject'), message: L('Votre message', 'Your message'), send: L('Envoyer le message', 'Send message'),
+      infoT: L('Autres moyens', 'Other ways to reach us'), emailL: L('E-mail', 'Email'), responseL: L('Temps de réponse', 'Response time'), response: L('Sous 24 heures, du lundi au vendredi', 'Within 24 hours, Monday to Friday'), addrL: L('Adresse', 'Address'), addr: 'Imagitale SAS, 12 rue des Lilas, 75011 Paris',
+    };
+
+    return {
+      s, lang, cart: cartCount, screen,
+      hasCart: cartCount > 0,
+      showChrome: screen !== 'preview' && screen !== 'admin',
+      isLanding: screen === 'landing', isStories: screen === 'stories', isDetail: screen === 'detail',
+      isCustomize: screen === 'customize', isProcessing: screen === 'processing', isPreview: screen === 'preview',
+      isCart: screen === 'cart', isCheckout: screen === 'checkout', isFaq: screen === 'faq', isAdmin: screen === 'admin',
+      enSegStyle: this.seg(lang === 'en'), frSegStyle: this.seg(lang === 'fr'),
+      setEn: () => this.setState({ lang: 'en' }), setFr: () => this.setState({ lang: 'fr' }),
+      goHome: () => this.go('landing'), goStories: () => this.go('stories'),
+      goCustomize: () => this.go('customize'), goCart: () => this.go('cart'), goCheckout: () => this.go('checkout'),
+      goFaq: () => this.go('faq'), goAdmin: () => this.go('admin'),
+      goPreview: () => { this.setState({ page: 0 }); this.go('preview'); },
+
+      books: localBooks, testimonials, filters,
+      heroBookTitle: this.books[0].title[lang],
+      cover0: this.img('forest', 600, 800), cover1: this.img('ocean', 600, 800), cover2: this.img('space', 600, 800),
+
+      childName, setName: (e) => this.setState({ childName: e.target.value }),
+      currentBook: { title: cur.title[lang], slug: cur.slug, cover: this.img(cur.slug, 700, 933), age: cur.age, pages: cur.pages[lang], desc: cur.desc[lang], price: cur.price },
+      previewName: name, previewStarring: s.previewStarring,
+      similarBooks: this.books.map(mkBook).filter((_, i) => i !== selBook),
+      personaliseCurrent: () => { this.setState({ childName: '', slots: ['empty', 'empty'], parentAdded: false }); this.go('customize'); },
+      previewCurrent: () => { this.setState({ page: 0 }); this.go('preview'); },
+
+      slot0Empty: slots[0] === 'empty', slot0Full: slots[0] === 'full',
+      slot1Empty: slots[1] === 'empty', slot1Full: slots[1] === 'full',
+      slot0Style: slotStyle(slots[0] === 'full'), slot1Style: slotStyle(slots[1] === 'full'),
+      upload0: () => { const n = [...slots]; n[0] = n[0] === 'full' ? 'empty' : 'full'; this.setState({ slots: n }); },
+      upload1: () => { const n = [...slots]; n[1] = n[1] === 'full' ? 'empty' : 'full'; this.setState({ slots: n }); },
+      counterText, counterColor,
+      parentAdded, parentCardStyle, parentSign: parentAdded ? '✓' : '＋',
+      toggleParent: () => this.setState({ parentAdded: !parentAdded }),
+      startProcessing: () => { this.go('processing'); this.runPipeline(); },
+
+      pipeline: stages, procHeading,
+      pipelineDone: stageIdx >= this.PIPE.length,
+      pipelineRunning: stageIdx >= 0 && stageIdx < this.PIPE.length && !failed,
+      retry: () => this.runPipeline(),
+      simFail: () => this.setState({ failed: true }),
+
+      scenes, currentScene: curScene, pageCounter,
+      prevPage: () => this.setState({ page: (page - 1 + cur.scenes.length) % cur.scenes.length }),
+      nextPage: () => this.setState({ page: (page + 1) % cur.scenes.length }),
+      addToCart: () => { this.addBook(selBook); this.showToast(s.addedToast); },
+
+      cartItems, cartEmpty: cartCount === 0, cartHasItems: cartCount > 0,
+      subtotal: this.fmt(subtotalNum), shipping: shipNum ? this.fmt(shipNum) : (lang === 'fr' ? 'Gratuite' : 'Free'), total: this.fmt(subtotalNum + shipNum),
+      inputStyle,
+      gdpr: st.gdpr, gdprCheck: st.gdpr ? '✓' : '',
+      gdprBoxStyle: 'width:18px;height:18px;border-radius:6px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;transition:all .15s ease;' + (st.gdpr ? 'background:#3D2B1F;border:1.5px solid #3D2B1F;' : 'background:#fff;border:1.5px solid #E2DDD6;'),
+      toggleGdpr: () => this.setState({ gdpr: !st.gdpr }),
+      payLabel: `${s.payNow} ${this.fmt(subtotalNum + shipNum)}`,
+      placeOrder: () => { this.setState({ cartItems: [], gdpr: false }); this.showToast(s.orderPlaced); this.go('landing'); },
+
+      faqQuery: st.faqQuery, setFaqQuery: (e) => this.setState({ faqQuery: e.target.value }),
+      faqItems, faqNoResults: faqItems.length === 0,
+
+      adminNav, adminHeading: adminHead, adminSub: adminSubMap[st.adminTab],
+      adminOverview: st.adminTab === 'overview', adminJobs: st.adminTab === 'jobs', adminOrders: st.adminTab === 'orders', adminStorage: st.adminTab === 'storage',
+      adminStats, adminChart, adminActivity: this.ACTIVITY, jobRows, orderRows, storageCats,
+
+      isLogin: screen === 'login', isAccount: screen === 'account', isPrivacy: screen === 'privacy', isContact: screen === 'contact',
+      loggedIn: !!u, loggedOut: !u, userInitials, userName: u ? u.name : '', userEmail: u ? u.email : '',
+      goLogin: () => this.go('login'), goPrivacy: () => this.go('privacy'), goContact: () => this.go('contact'),
+      goAccount: () => { if (st.user) this.go('account'); else this.go('login'); },
+      au, ac, pv, ct,
+      loginEmail: st.loginEmail, setLoginEmail: (e) => this.setState({ loginEmail: e.target.value }),
+      setMagicTab: () => this.setState({ loginTab: 'magic' }), setPassTab: () => this.setState({ loginTab: 'password' }),
+      magicSent: st.magicSent, loginForm: !st.magicSent, sendMagic: () => this.setState({ magicSent: true }),
+      doLogin: () => {
+        const email = (st.loginEmail.trim() || 'emma.dupont@email.com');
+        const name = email.split('@')[0].replace(/[._]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+        const role = email.toLowerCase().includes('admin') ? 'admin' : 'user';
+        this.setState({ user: { name, email, role }, magicSent: false });
+        this.go(role === 'admin' ? 'admin' : 'account');
+      },
+      logout: () => { this.setState({ user: null }); this.go('landing'); },
+      acctOrders,
+      acctOrdersView: st.acctTab === 'orders', acctDataView: st.acctTab === 'data', acctSetView: st.acctTab === 'settings',
+      tabOrdersStyle: acctTabStyle(st.acctTab === 'orders'), tabDataStyle: acctTabStyle(st.acctTab === 'data'), tabSetStyle: acctTabStyle(st.acctTab === 'settings'),
+      setTabOrders: () => this.setState({ acctTab: 'orders' }), setTabData: () => this.setState({ acctTab: 'data' }), setTabSet: () => this.setState({ acctTab: 'settings' }),
+      saveSettings: () => this.showToast(ac.saved),
+      exportData: () => this.showToast(L('✓ Export en préparation…', '✓ Preparing your export…')),
+      contactSend: () => { this.showToast(L('✓ Message envoyé — merci !', '✓ Message sent — thank you!')); this.go('landing'); },
+
+      toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
