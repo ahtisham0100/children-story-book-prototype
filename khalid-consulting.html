@@ -191,6 +191,58 @@
   .work-cap h3{font-size:17px}
   .work-cap p{font-size:13px;color:var(--ink-mute)}
 
+  /* ── Experience timeline ── */
+  .timeline{padding:8px 0 40px}
+  .tl-item{
+    display:flex;gap:32px;padding:24px 0;border-bottom:1px solid var(--line);
+    align-items:flex-start;
+  }
+  .tl-item:last-child{border-bottom:none}
+  .tl-year{
+    flex:0 0 130px;font-family:'Outfit',sans-serif;font-size:14px;
+    color:var(--ink-mute);letter-spacing:.04em;white-space:nowrap;padding-top:2px;
+  }
+  .tl-body h3{font-size:17px;margin-bottom:4px}
+  .tl-body .org{font-size:13px;color:var(--ink-soft);margin-bottom:6px}
+  .tl-body p{font-size:14px;color:var(--ink-soft);max-width:620px}
+  .side-grid{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;
+    border-top:1px solid var(--line-dark);padding:36px 0 40px;
+  }
+  .side-grid h3{font-size:15px;margin-bottom:14px;letter-spacing:.04em}
+  .side-grid ul{list-style:none}
+  .side-grid li{
+    font-size:13.5px;color:var(--ink-soft);padding:7px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .side-grid li:last-child{border-bottom:none}
+
+  /* ── Publications ── */
+  .pub-intro{font-size:15px;color:var(--ink-soft);max-width:680px;margin-bottom:8px}
+  .pub-list{padding:20px 0 12px}
+  .pub{
+    display:flex;gap:28px;padding:22px 0;border-bottom:1px solid var(--line);
+    align-items:baseline;
+  }
+  .pub:last-child{border-bottom:none}
+  .pub .yr{
+    flex:0 0 56px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--ink-mute);
+  }
+  .pub h3{font-size:16px;font-weight:400;line-height:1.45;margin-bottom:5px}
+  .pub h3 a{text-decoration:none;border-bottom:1px solid var(--line-dark)}
+  .pub h3 a:hover{border-bottom-color:transparent}
+  .pub .src{font-size:13px;color:var(--ink-mute);font-style:italic}
+  .pub-note{
+    display:flex;gap:24px;flex-wrap:wrap;align-items:center;
+    border-top:1px solid var(--line-dark);padding:26px 0 8px;
+  }
+  .pub-note p{font-size:13.5px;color:var(--ink-soft)}
+  .pub-note a{border-bottom:1px solid var(--ink)}
+  .pub-note a:hover{border-bottom-color:transparent}
+
+  /* ── Portfolio descriptions ── */
+  .work-desc{font-size:13.5px;color:var(--ink-soft);margin-top:8px;max-width:520px}
+
   /* ── Footer ── */
   footer{
     border-top:1px solid var(--line);
@@ -209,6 +261,10 @@
     .about{flex-direction:column;gap:32px;padding:44px 0}
     .about-photo{position:static;flex-basis:auto;width:100%;max-width:420px}
     .work-grid,.work-grid.alt{grid-template-columns:1fr;gap:28px}
+    .side-grid{grid-template-columns:1fr;gap:24px}
+    .tl-item{flex-direction:column;gap:6px}
+    .tl-year{flex-basis:auto}
+    .pub{flex-direction:column;gap:4px}
     .stats{grid-template-columns:1fr 1fr}
     .stat:nth-child(3){border-left:none;border-top:1px solid var(--line)}
     .stat:nth-child(4){border-top:1px solid var(--line)}
@@ -228,6 +284,8 @@
       <div class="nav-links">
         <button type="button" class="nav-btn active" data-screen="home" onclick="showScreen('home')">Home</button>
         <button type="button" class="nav-btn" data-screen="about" onclick="showScreen('about')">About</button>
+        <button type="button" class="nav-btn" data-screen="experience" onclick="showScreen('experience')">Experience</button>
+        <button type="button" class="nav-btn" data-screen="publications" onclick="showScreen('publications')">Publications</button>
         <button type="button" class="nav-btn" data-screen="portfolio" onclick="showScreen('portfolio')">Portfolio</button>
       </div>
       <a class="nav-cta" href="mailto:info@khalidiqbal.com">Get in Touch</a>
@@ -350,6 +408,200 @@
     </div>
   </section>
 
+  <!-- ════════ EXPERIENCE ════════ -->
+  <section class="screen" id="screen-experience">
+    <div class="wrap">
+      <div class="work-head">
+        <div>
+          <p class="kicker">Career</p>
+          <h2>Experience</h2>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-year">2023 — Present</div>
+          <div class="tl-body">
+            <h3>Post-doctoral Researcher</h3>
+            <p class="org">Leibniz Institute for Prevention Research and Epidemiology (BIPS) — Bremen, Germany</p>
+            <p>Methodological research in epidemiology within the Biomarkers and Metabolism group, with a focus on dietary intake and chronic disease risk, and maternal and child nutrition.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2018 — 2023</div>
+          <div class="tl-body">
+            <h3>Assistant, then Associate Professor</h3>
+            <p class="org">Khyber Medical University — Peshawar, Pakistan</p>
+            <p>Teaching and research in human nutrition and epidemiology; supervision of postgraduate research.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2017 — 2018</div>
+          <div class="tl-body">
+            <h3>Post-doctoral Researcher</h3>
+            <p class="org">German Institute of Human Nutrition (DIfE) — Potsdam, Germany</p>
+            <p>Dietary pattern analysis in the EPIC-Potsdam cohort — network models of food intake and their associations with type 2 diabetes, cardiovascular disease, and cancer.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2014 — 2017</div>
+          <div class="tl-body">
+            <h3>Doctor of Public Health (DrPH), Nutritional Epidemiology</h3>
+            <p class="org">Technische Universität Berlin — Germany</p>
+            <p>Doctoral research on dietary intake patterns and chronic disease risk in large population cohorts.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2012 — 2015</div>
+          <div class="tl-body">
+            <h3>Consultant Nutritionist</h3>
+            <p class="org">Solutions for Sustainable Development Initiative — Pakistan</p>
+            <p>Nutrition programme design, surveys, and evaluation for development-sector clients.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2011 — 2012</div>
+          <div class="tl-body">
+            <h3>Programme Officer, Nutrition</h3>
+            <p class="org">United Nations World Food Programme (WFP)</p>
+            <p>Field nutrition programming — assessments, monitoring, and implementation support.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2007 — 2011</div>
+          <div class="tl-body">
+            <h3>Provincial Coordinator</h3>
+            <p class="org">Micronutrient Initiative (now Nutrition International)</p>
+            <p>Provincial coordination of micronutrient supplementation and fortification programmes.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2006</div>
+          <div class="tl-body">
+            <h3>Nutritionist</h3>
+            <p class="org">World Health Organization (WHO)</p>
+            <p>Nutrition assessment and programme support.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-grid">
+        <div>
+          <h3>Education</h3>
+          <ul>
+            <li>DrPH Nutritional Epidemiology — TU Berlin</li>
+            <li>MSc Epidemiology — Johannes Gutenberg University Mainz</li>
+            <li>MSc (Hons) Human Nutrition — KP Agricultural University</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Teaching</h3>
+          <ul>
+            <li>Introduction to Epidemiology</li>
+            <li>Maternal, Infant, Child &amp; Adolescent Nutrition</li>
+            <li>Public Health Nutrition</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Memberships &amp; Awards</h3>
+          <ul>
+            <li>International Epidemiological Association (IEA)</li>
+            <li>Peer reviewer for six scientific journals</li>
+            <li>HEC/DAAD PhD Scholarship</li>
+            <li>Flemish Inter-University Council Scholarship</li>
+            <li>DFID Master&rsquo;s Studies Scholarship</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cta-band">
+        <h2>Fifteen years across field programmes, cohorts, and the classroom.</h2>
+        <a class="btn solid" href="mailto:info@khalidiqbal.com">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ PUBLICATIONS ════════ -->
+  <section class="screen" id="screen-publications">
+    <div class="wrap">
+      <div class="work-head">
+        <div>
+          <p class="kicker">Research Output</p>
+          <h2>Selected Publications</h2>
+        </div>
+      </div>
+      <p class="pub-intro">Author of 42 peer-reviewed publications in nutritional epidemiology, with a focus on dietary pattern methodology and chronic disease risk in large population cohorts, including EPIC-Potsdam.</p>
+
+      <div class="pub-list">
+        <div class="pub">
+          <span class="yr">2025</span>
+          <div>
+            <h3><a href="https://academic.oup.com/ajeadvances/article/1/1/uuaf005/8131755" target="_blank" rel="noopener">Approaches for harmonization of biomarker data from multiple studies: a narrative methodological review</a></h3>
+            <p class="src">AJE Advances — Research in Epidemiology</p>
+          </div>
+        </div>
+        <div class="pub">
+          <span class="yr">2024</span>
+          <div>
+            <h3><a href="https://www.nature.com/articles/s41598-024-78287-5" target="_blank" rel="noopener">Healthy food diversity and the risk of major chronic diseases in the EPIC-Potsdam study</a></h3>
+            <p class="src">Scientific Reports</p>
+          </div>
+        </div>
+        <div class="pub">
+          <span class="yr">2021</span>
+          <div>
+            <h3><a href="https://link.springer.com/article/10.1007/s00394-021-02545-9" target="_blank" rel="noopener">Advances in dietary pattern analysis in nutritional epidemiology</a></h3>
+            <p class="src">European Journal of Nutrition</p>
+          </div>
+        </div>
+        <div class="pub">
+          <span class="yr">2019</span>
+          <div>
+            <h3><a href="https://link.springer.com/article/10.1186/s12937-019-0440-8" target="_blank" rel="noopener">Meal analysis for understanding eating behavior: meal- and participant-specific predictors for the variance in energy and macronutrient intake</a></h3>
+            <p class="src">Nutrition Journal</p>
+          </div>
+        </div>
+        <div class="pub">
+          <span class="yr">2018</span>
+          <div>
+            <h3><a href="https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-018-1082-y" target="_blank" rel="noopener">Nordic diet, Mediterranean diet, and the risk of chronic diseases: the EPIC-Potsdam study</a></h3>
+            <p class="src">BMC Medicine</p>
+          </div>
+        </div>
+        <div class="pub">
+          <span class="yr">2018</span>
+          <div>
+            <h3><a href="https://link.springer.com/article/10.1007/s00394-018-1714-1" target="_blank" rel="noopener">Gaussian graphical models identified food intake networks and risk of type 2 diabetes, CVD, and cancer in the EPIC-Potsdam study</a></h3>
+            <p class="src">European Journal of Nutrition</p>
+          </div>
+        </div>
+        <div class="pub">
+          <span class="yr">2018</span>
+          <div>
+            <h3><a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0202936" target="_blank" rel="noopener">Meal and habitual dietary networks identified through Semiparametric Gaussian Copula Graphical Models in a German adult population</a></h3>
+            <p class="src">PLOS ONE</p>
+          </div>
+        </div>
+        <div class="pub">
+          <span class="yr">2016</span>
+          <div>
+            <h3><a href="https://pubmed.ncbi.nlm.nih.gov/26817715/" target="_blank" rel="noopener">Gaussian graphical models identify networks of dietary intake in a German adult population</a></h3>
+            <p class="src">The Journal of Nutrition</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pub-note">
+        <p>Full publication record: <a href="https://orcid.org/0000-0002-3312-4259" target="_blank" rel="noopener">ORCID 0000-0002-3312-4259</a></p>
+      </div>
+
+      <div class="cta-band">
+        <h2>Need analysis and writing that holds up in peer review?</h2>
+        <a class="btn solid" href="mailto:info@khalidiqbal.com">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ════════ PORTFOLIO ════════ -->
   <section class="screen" id="screen-portfolio">
     <div class="wrap">
@@ -362,23 +614,27 @@
 
       <div class="work-grid">
         <div class="work-item">
-          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/black-and-white-architecture-structure-bridge-bicycle-bike-785-pxhere.com_.jpg" alt="Crossing the Line"></div>
-          <div class="work-cap"><h3>Crossing the Line</h3><p>Copenhagen, 2025</p></div>
+          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/black-and-white-architecture-structure-bridge-bicycle-bike-785-pxhere.com_.jpg" alt="Dietary pattern research"></div>
+          <div class="work-cap"><h3>Dietary Pattern Research</h3><p>EPIC-Potsdam cohort</p></div>
+          <p class="work-desc">Network models of food and nutrient intake in one of Europe&rsquo;s major prospective cohorts — linking dietary patterns to type 2 diabetes, cardiovascular disease, and cancer risk. Published in BMC Medicine, European Journal of Nutrition, and Scientific Reports.</p>
         </div>
         <div class="work-item">
-          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/light-black-and-white-architecture-track-white-window-8885-pxhere.com_.jpg" alt="Jane"></div>
-          <div class="work-cap"><h3>Jane</h3><p>Stockholm, 2024</p></div>
+          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/light-black-and-white-architecture-track-white-window-8885-pxhere.com_.jpg" alt="Field nutrition programmes"></div>
+          <div class="work-cap"><h3>Field Nutrition Programmes</h3><p>WHO &middot; WFP &middot; Nutrition International</p></div>
+          <p class="work-desc">A decade of programme work in Pakistan — micronutrient supplementation and fortification at provincial scale, food assistance programming, and population health assessments.</p>
         </div>
       </div>
 
       <div class="work-grid alt">
         <div class="work-item">
-          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/architecture-structure-building-apartment-stadium-appartment-53436-pxhere.com_.jpg" alt="Everyday Geometry"></div>
-          <div class="work-cap"><h3>Everyday Geometry</h3><p>Hong Kong, 2023</p></div>
+          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/architecture-structure-building-apartment-stadium-appartment-53436-pxhere.com_.jpg" alt="Evidence synthesis"></div>
+          <div class="work-cap"><h3>Evidence Synthesis</h3><p>Systematic reviews &amp; meta-analyses</p></div>
+          <p class="work-desc">Systematic reviews, meta-analyses, and methodological reviews to peer-review standard — including food group and mortality meta-analysis and biomarker data harmonization methodology.</p>
         </div>
         <div class="work-item">
-          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/wing-architecture-structure-building-ceiling-geometric-99094-pxhere.com_.jpg" alt="Silent Concrete"></div>
-          <div class="work-cap"><h3>Silent Concrete</h3><p>Spain, 2023</p></div>
+          <div class="ph"><img src="https://khalidiqbal.com/wp-content/themes/kanoa/assets/images/wing-architecture-structure-building-ceiling-geometric-99094-pxhere.com_.jpg" alt="Biostatistics and study design"></div>
+          <div class="work-cap"><h3>Biostatistics &amp; Study Design</h3><p>Consulting projects</p></div>
+          <p class="work-desc">Study protocols, sample-size and power calculations, statistical analysis plans, and reproducible analyses in R and SAS — with commented code delivered for every project, for academic and industry clients.</p>
         </div>
       </div>
 
@@ -413,7 +669,7 @@
   // Deep-link support: open #about or #portfolio directly
   (function () {
     var h = (location.hash || '').replace('#', '');
-    if (h === 'about' || h === 'portfolio') showScreen(h);
+    if (h === 'about' || h === 'portfolio' || h === 'experience' || h === 'publications') showScreen(h);
   })();
 </script>
 </body>
